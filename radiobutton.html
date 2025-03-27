@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label class="switch_order">
+  <input type="checkbox" id="switch_gift_order">
+    <span class="radio_slider"></span>
+    </label>
+<span>Order for someone else?</span>
+<p id="status">Status: Off</p>
+
+<style>
+  .switch_order {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+    margin-left: 8px;
+  }
+
+  .switch_order input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .radio_slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    border-radius: 20px;
+    inset: 0;
+    transition: 0.4s;
+  }
+
+  .radio_slider:before {
+    content: "";
+    height: 14px;
+    width: 14px;
+    position: absolute;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+  }
+
+  input:checked + .radio_slider {
+    background-color: #4CAF50;
+  }
+
+  input:checked + .radio_slider:before {
+    transform: translateX(14px);
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('switch_gift_order');
+  const statusText = document.getElementById('status');
+
+  toggle.addEventListener('change', function() {
+    if (toggle.checked) {
+      statusText.textContent = 'Status: On';
+    } else {
+      statusText.textContent = 'Status: Off';
+    }
+
+    console.log('Checked:', toggle.checked); // Logs true if checked, false if not
+
+  });
+</script>
+
+</body>
+</html>
