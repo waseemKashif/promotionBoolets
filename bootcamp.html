@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .main {
+        position: relative;
+        width: 305px;
+        margin: 0px auto;
+        padding: 2px;
+        overflow: hidden;
+      }
+
+      .container {
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 2;
+        background: #fff;
+        border-radius: 8px;
+      }
+
+      .container2 {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 0;
+        border-radius: 9px;
+        inset: 0;
+        pointer-events: none; /* allows clicks to pass through */
+      }
+
+      .container2::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 9px;
+        padding: 3px;
+        /* background: conic-gradient(cyan, blue); */
+        -webkit-mask: linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        mask-composite: inherit;
+        animation: borderAnimation 10s linear infinite;
+        background: linear-gradient(cyan, blue, cyan, blue);
+      }
+
+      @keyframes borderAnimation {
+        to {
+          transform: rotate(0deg);
+        }
+        from {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes rainbowBackground {
+        10% {
+          background: conic-gradient(blue,cyan, blue);
+        }
+      50% {
+          background: conic-gradient(cyan, blue, cyan);
+        }
+        75% {
+          background: conic-gradient(blue,cyan, blue);
+        }
+        100% {
+          background: conic-gradient(cyan, blue, cyan);
+        }
+      }
+      .rainbow {
+        animation: rainbowBackground 5s linear infinite;
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="container">
+        <h1>Welcome to the Bootcamp</h1>
+        <p>This is a simple HTML document.</p>
+        <p>We are learning how to create a basic HTML structure.</p>
+        <p>Feel free to explore and modify the content!</p>
+      </div>
+      <div class="container2 rainbow"></div>
+    </div>
+  </body>
+</html>
