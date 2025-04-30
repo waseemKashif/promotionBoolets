@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sortable Two Lists</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 20px;
+        width: 200px;
+        min-height: 200px;
+        border: 1px solid #ccc;
+        display: inline-block;
+        vertical-align: top;
+      }
+      li {
+        padding: 10px;
+        margin: 5px;
+        background: #f0f0f0;
+        cursor: grab;
+        border: 1px solid #aaa;
+        border-radius: 5px ;
+      }
+      form.active {
+        display: block !important;
+      }
+      form.test1 {
+        display: none;
+      }
+      #form2 {
+        display: none;
+      }
+      #list4 #form2 {
+        display: block !important;
+      }
+      #list1 li {
+         background-color: rgb(238, 141, 141);
+      }
+      #list2 li {
+         background-color: cornflowerblue;
+      }
+        .main {
+        position: relative;
+        padding: 2px;
+        overflow: hidden;
+        width: 100%;
+      }
+          .container2 {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 0;
+        border-radius: 9px;
+        inset: 0;
+        pointer-events: none; /* allows clicks to pass through */
+      }
+
+      .container2::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 9px;
+        padding: 3px;
+        /* background: conic-gradient(cyan, blue); */
+        -webkit-mask: linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        mask-composite: inherit;
+        animation: borderAnimation 10s linear infinite;
+        background: linear-gradient(cyan, blue, cyan, blue);
+      }
+
+      @keyframes borderAnimation {
+        to {
+          transform: rotate(0deg);
+        }
+        from {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes rainbowBackground {
+        0% {
+          background: conic-gradient(blue,cyan, blue);
+        }
+         20% {
+          background: conic-gradient(cyan, blue, cyan);
+        }
+         50% {
+          background: conic-gradient(cyan, blue, cyan);
+        }
+        75% {
+          background: conic-gradient(blue,cyan, blue);
+        }
+        100% {
+          background: conic-gradient(cyan, blue, cyan);
+        }
+      }
+      .rainbow {
+        animation: rainbowBackground 5s linear infinite;
+      }
+       .container {
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 2;
+        background: #fff;
+        border-radius: 8px;
+        width: -webkit-fill-available;
+        margin: 0;
+         height: -webkit-fill-available;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div class=" section" style="padding: 20px;">
+
+      <h1>Sortable Two Lists</h1>
+      <div style="display: flex; gap: 20px; flex-direction: row">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <span> List 1</span>
+          <ul id="list1">
+            <li>
+              Item 1A
+              <div></div>
+            </li>
+            <li>Item 1B</li>
+            <li>Item 1C</li>
+          </ul>
+        </div>
+        <div style=" display: flex; align-items: center; flex-direction: column;">
+          <span> List 2</span>
+          <ul id="list2">
+            <li>
+              <span> Item 2A </span>
+              <form action="post" id="form2">
+                <p>this is form for first</p>
+                <label for="user">User</label>
+                <input type="text" />
+              </form>
+            </li>
+            <li>Item 2B</li>
+            <li>Item 2C</li>
+          </ul>
+        </div>
+        <div class="main">
+  
+          <ul
+            id="list4"
+            class="container"
+          ></ul>
+           <div class="container2 rainbow"></div>
+        </div>
+        <form action="method" id="basic_info" class="test1">
+          <label for="name">Name</label>
+          <input type="text" name="name" />
+        </form>
+      </div>
+    </div>
+
+    <script>
+      new Sortable(document.getElementById("list1"), {
+        group: "shared", // set both lists to the same group
+        animation: 150,
+      });
+
+      new Sortable(document.getElementById("list2"), {
+        group: "shared", // set both lists to the same group
+        animation: 150,
+      });
+      new Sortable(document.getElementById("list4"), {
+        group: "shared", // set both lists to the same group
+        animation: 150,
+      });
+      const form = document.querySelector("form.test1");
+      const openForm = () => {
+        form.classList.toggle("active");
+      };
+      const listItems = document.querySelector("ul li");
+      listItems.addEventListener("click", openForm);
+    </script>
+  </body>
+</html>
