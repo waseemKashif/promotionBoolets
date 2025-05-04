@@ -1,0 +1,198 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+/**
+ * Category layered navigation
+ *
+ * @var $block \Magento\LayeredNavigation\Block\Navigation
+ */
+$democategories = [
+    'Electronics' => [
+        'All in Electronics',
+        'Computers' => [
+            'All in Computers',
+            'Tablets',
+            'Laptops & PC',
+            'Printers & Scanners',
+            'Mouse & Keyboard' => [
+                'game keyboard',
+                'bluetooth mouse'],
+            'IT Accessories' => [],
+        ],
+        'TV' => ['smart tv','QLED TV'],
+        'Cameras' => [],
+        'Fridges'
+    ]
+];
+?>
+<?php if ($block->canShowBlock()) : ?>
+    <div class="block filter">
+        <div class="block-title filter-title">
+            <strong><?= $block->escapeHtml(__('Shop By')) ?></strong>
+        </div>
+
+        <div class="block-content filter-content">
+            <!--new code-->
+            <ul class="category-list">
+                        <?php function renderCategories($democategories) { ?>
+                            <?php foreach ($democategories as $category => $subcategories): ?>
+                                <?php if (is_array($subcategories)): ?> 
+                                    <?php if (count($subcategories) > 0): ?>
+                                        <li class="category-item has-children collapsed">
+                                            <div class="category-label" onclick="toggleSub(this)">
+                                                <span class="toggle-icon"><img src="/media/wysiwyg/plusLine.png" alt="expand"/></span> <a href="/" class="filter_link"><?= htmlspecialchars($category) ?> </a> 
+                                            </div>
+                                            <ul class="subcategory-list">
+                                                <?php renderCategories($subcategories); ?>
+                                            </ul>
+                                        </li>
+                                    <?php else: ?>
+                                        <li class="category-item">
+                                            <div class="category-label">
+                                             <label class="custom-checkbox">
+                                                  <input type="checkbox" name="styled" value="1">
+                                              </label> 
+                                              <a href="/" class="filter_link" ><?= htmlspecialchars($category) ?></a> 
+                                            </div>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <li class="category-item">
+                                        <div class="category-label">
+                                            <label class="custom-checkbox">
+                                                  <input type="checkbox" name="styled" value="1">
+                                              </label>  <a href="/" class="filter_link"><?= htmlspecialchars($subcategories) ?></a> 
+                                        </div>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php } ?>
+                        
+                        <?php renderCategories($democategories); ?>
+                    </ul>
+                    <!--ends here-->
+            <?= $block->getChildHtml('state') ?>
+        
+            <?php if ($block->getLayer()->getState()->getFilters()) : ?>
+                <div class="block-actions filter-actions">
+                    <a href="<?= $block->escapeUrl($block->getClearUrl()) ?>" class="action clear filter-clear"><span><?= $block->escapeHtml(__('Clear All')) ?></span></a>
+                </div>
+            <?php endif; ?>
+            <?php $wrapOptions = false; ?>
+            <?php foreach ($block->getFilters() as $filter) : ?>
+                <?php if (!$wrapOptions) : ?>
+                    <strong role="heading" aria-level="2" class="block-subtitle filter-subtitle"><?= $block->escapeHtml(__('Shopping Options')) ?></strong>
+                    <dl class="filter-options" id="narrow-by-list">
+                    <?php $wrapOptions = true;
+                endif; ?>
+                    <?php if ($filter->getItemsCount()) : ?>
+                        <dt role="heading" aria-level="3" class="filter-options-title"><?= $block->escapeHtml(__($filter->getName())) ?></dt>
+                        <dd class="filter-options-content"><?= /* @noEscape */ $block->getChildBlock('renderer')->render($filter) ?></dd>
+                    <?php endif; ?>
+            <?php endforeach; ?>
+            <?php if ($wrapOptions) : ?>
+                </dl>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+<style>
+.category-item .filter_link {
+    line-height:16px;
+}
+ .custom-checkbox {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      font-size: 18px;
+    }
+
+    .custom-checkbox input[type="checkbox"] {
+      appearance: none;
+      width: 21px;
+      height: 21px;
+      border: 1px solid #cacaca;
+      border-radius: 4px;
+      transition: background 0.3s, border-color 0.3s;
+      position: relative;
+      margin: -4px 0px 0px 0px;
+    }
+
+    .custom-checkbox input[type="checkbox"]:checked {
+      background-color: #B7D635;
+      border-color: #B7D635;
+    }
+
+    .custom-checkbox input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+.category-list, .subcategory-list {
+    list-style: none;
+    padding-left: 25px;
+    margin: 0;
+}
+.category-item {
+    margin: 5px 0;
+}
+.category-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    column-gap:5px;
+    margin-bottom: 10px;
+}
+.toggle-icon {
+    display: inline-flex;
+    width: 20px;
+    transition: transform 0.3s ease;
+    align-items: center;
+    border: 1px solid #cacaca;
+    height: 20px;
+    justify-content: center;
+}
+.has-children > .subcategory-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    position:relative;
+}
+.has-children > .subcategory-list::before {
+    content:' ';
+    position:absolute;
+    height:100%;
+    left:10px;
+    border-left:1px solid #cacaca;
+}
+.has-children.expanded > .subcategory-list {
+    max-height: 1000px;
+}
+
+</style>
+
+<script>
+function toggleSub(el) {
+    const parentLi = el.closest('li.has-children');
+    parentLi.classList.toggle('expanded');
+    parentLi.classList.toggle('collapsed');
+    
+    const icon = el.querySelector('.toggle-icon');
+    if (parentLi.classList.contains('expanded')) {
+        icon.innerHTML = '<img src="/media/wysiwyg/minusLineDark.png" alt="expand"/>';
+    } else {
+        icon.innerHTML = '<img src="/media/wysiwyg/plusLine.png" alt="expand"/>';
+    }
+}
+</script>
