@@ -13,10 +13,8 @@
       ul {
         list-style: none;
         padding: 0;
-        margin: 20px;
         width: 200px;
         min-height: 200px;
-        border: 1px solid #ccc;
         display: inline-block;
         vertical-align: top;
       }
@@ -25,17 +23,24 @@
         margin: 5px;
         background: #f0f0f0;
         cursor: grab;
-        border: 1px solid #aaa;
-        border-radius: 5px;
       }
-   
+   #left_menu {
+        background-color: aliceblue;
+        margin: 0;
+        height: 100vh;
+      }
+      #right_menu {
+        background-color: aliceblue;
+      }
 
       #left_menu li {
-        background-color: rgb(238, 141, 141);
+        background-color: aliceblue;
+         text-transform: capitalize;
+         font-weight: semibold;
+          font-size: 20px;
+          margin: 0;
       }
-      #right_menu li {
-        background-color: cornflowerblue;
-      }
+   
       .main {
         position: relative;
         padding: 2px;
@@ -49,8 +54,6 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         position: relative;
         z-index: 2;
-        background: #fff;
-        border-radius: 8px;
         width: -webkit-fill-available;
         margin: 0;
         height: -webkit-fill-available;
@@ -61,16 +64,55 @@
       #left_menu .content {
         display: none !important;
       }
+      .menu_heading {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: center;
+        display: block;
+      }
+      #left_menu .list_item::after {
+        content: " ";
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color: #ccc;
+        margin-top: 10px;
+      }
+      /* add arrow down in right_menu list items at the end*/
+      #right_menu .list_item::after {
+        content: "▼";
+        font-size: 12px;
+        margin-right: 5px;
+        color: #000;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        transform: translateY(-50%);
+        transition: transform 0.3s ease-in-out;
+      }
+ #right_menu .list_item.active::after {
+       transform: rotate(180deg);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      #right_menu .list_item {
+        background-color: #f0f0f0;
+        text-transform: capitalize;
+        font-weight: semibold;
+        font-size: 20px;
+        position: relative;
+      }
+     
     </style>
   </head>
   <body>
-    <div class="section" style="padding: 20px">
-      <h1>Sortable Two Lists</h1>
+    <div class="section">
       <div style="display: flex; gap: 20px; flex-direction: row">
         <div style="display: flex; flex-direction: column; align-items: center">
-          <span> List 1</span>
           <ul id="left_menu">
-            <li onclick="openForm(this)">
+            <span class="menu_heading">Menu</span>
+            <li onclick="openForm(this)" class="list_item">
               <span class="left_heading"> top sale </span>
               <div class="content hidden">
                 <!-- sign up form -->
@@ -86,7 +128,7 @@
                 <!-- sign up form ends here -->
               </div>
             </li>
-            <li onclick="openForm(this)">
+            <li onclick="openForm(this)" class="list_item">
               <span class="left_heading"> best sale </span>
               <div class="content hidden">
                 <!-- sign in form -->
@@ -97,12 +139,42 @@
                   <input type="password" name="password" />
                   <button type="submit">Submit</button>
                 </form>
+                <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam ullam nisi dignissimos tempora, deserunt, rem similique nesciunt nemo commodi corporis at explicabo veniam non consequuntur sapiente perspiciatis, consectetur quibusdam mollitia dolorem modi a? Commodi quaerat possimus molestiae sapiente temporibus illum aliquam deleniti beatae tempore pariatur velit, iure quod soluta ipsam dolor quisquam modi neque tenetur tempora ratione placeat repudiandae expedita! Nobis quasi tenetur quibusdam enim nam possimus, quae maxime consequuntur aspernatur eius eos dicta esse magni, odit perferendis vero doloremque, praesentium ab unde ipsum veritatis! Reprehenderit id vitae aliquam, quos animi molestias nihil itaque perferendis neque aliquid quo quasi temporibus?</p>
                 <!-- sign up form ends here -->
+              </div>
+            </li>
+            <li onclick="openForm(this)" class="list_item">
+              <span class="left_heading"> sale order count </span>
+              <div class="content hidden">
+                  <h2>Sales order count content here</h2>
+              </div>
+            </li>
+            <li onclick="openForm(this)" class="list_item">
+              <span class="left_heading"> sale qty</span>
+              <div class="content hidden">
+                  <h2>sale qty content here</h2>
+              </div>
+              </li> 
+            <li onclick="openForm(this)" class="list_item">
+              <span class="left_heading"> new arrival</span>
+              <div class="content hidden">
+                  <h2>new arrival content here</h2>
+              </div>
+            </li>
+            <li onclick="openForm(this)" class="list_item">
+              <span class="left_heading"> most visit</span>
+              <div class="content hidden">
+                  <h2>most visit content here</h2>
+              </div>
+            </li>
+            <li onclick="openForm(this)" class="list_item">
+              <span class="left_heading"> most search</span>
+              <div class="content hidden">
+                  <h2>most search content here</h2>
               </div>
             </li>
           </ul>
         </div>
-
         <div class="main">
           <ul id="right_menu" class="container"></ul>
         </div>
@@ -127,11 +199,14 @@
           const allContents = document.querySelectorAll(".content");
           allContents.forEach((c) => {
             c.style.display = "none";
+            c.parentElement.classList.remove("active");
           });
           // Show the clicked content div
           content.style.display = "block";
+          item.classList.add("active");
         } else {
           content.style.display = "none";
+          item.classList.remove("active");
         }
       }
 
