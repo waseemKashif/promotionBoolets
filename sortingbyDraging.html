@@ -183,25 +183,23 @@
 
     <script>
       new Sortable(document.getElementById("left_menu"), {
-        group: "shared", // set both lists to the same group
+        group: "shared", 
         animation: 150,
       });
 
       new Sortable(document.getElementById("right_menu"), {
-        group: "shared", // set both lists to the same group
+        group: "shared", 
         animation: 150,
       });
-      // Add event listeners to the list items
       const openForm=(item)=>{
         const content = item.querySelector(".content");
         if ( content.parentElement.parentElement.id === "right_menu" && content.style.display === "none") {
-          // Hide all other content divs
           const allContents = document.querySelectorAll(".content");
           allContents.forEach((c) => {
             c.style.display = "none";
             c.parentElement.classList.remove("active");
           });
-          // Show the clicked content div
+
           content.style.display = "block";
           item.classList.add("active");
         } else {
