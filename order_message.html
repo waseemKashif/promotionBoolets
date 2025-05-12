@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .caution_block {
+        display: flex;
+        align-items: center;
+        background-color: #fff;
+        color: #333;
+        padding: 5px 0px 0px;
+        width: 100%;
+        box-sizing: border-box;
+        height: 35px;
+        font-weight: 400;
+      }
+
+      .caution_icon {
+        flex-shrink: 0;
+        margin-right: 10px;
+      }
+
+      .scrolling_container {
+        overflow: hidden;
+        white-space: nowrap;
+        flex-grow: 1;
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+      
+
+      .scrolling_text {
+        display: inline-block;
+        padding-left: 100%;
+        animation: scroll-left 15s linear infinite;
+      }
+
+      @keyframes scroll-left {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+
+      .scrolling_text p {
+        display: inline;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="caution_block">
+      <img
+        class="caution_icon"
+        src="https://www.ansargallery.com//media/wysiwyg/pngcautionsm.png"
+        alt="caution"
+        width="24px"
+        height="24px"
+      />
+      <div class="scrolling_container">
+        <div class="scrolling_text">
+          <p>
+            Due to high order volume, deliveries may be delayed. We appreciate
+            your patience and understanding.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

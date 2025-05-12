@@ -45,7 +45,7 @@
         mask-composite: exclude;
         mask-composite: inherit;
         animation: borderAnimation 10s linear infinite;
-        background: linear-gradient(cyan, blue, cyan, blue);
+        background: conic-gradient(white, blue,rgb(73, 73, 238));
       }
 
       @keyframes borderAnimation {
@@ -58,19 +58,25 @@
       }
       @keyframes rainbowBackground {
         0% {
-          background: conic-gradient(blue,cyan, blue);
+         background: conic-gradient(white, blue,rgb(73, 73, 238));
         }
-         20% {
-          background: conic-gradient(cyan, blue, cyan);
+         /* 15% {
+          background: conic-gradient(rgb(73, 73, 238), blue,rgb(73, 73, 238));
+        }
+         35% {
+          background: conic-gradient(rgb(73, 73, 238), blue,rgb(73, 73, 238));
         }
          50% {
-          background: conic-gradient(cyan, blue, cyan);
+          background: conic-gradient(rgb(73, 73, 238), blue,rgb(73, 73, 238));
         }
-        75% {
-          background: conic-gradient(blue,cyan, blue);
+        70% {
+          background: conic-gradient(rgb(73, 73, 238), blue,rgb(73, 73, 238));
         }
+        90% {
+          background: conic-gradient(rgb(73, 73, 238), blue,rgb(73, 73, 238));
+        } */
         100% {
-          background: conic-gradient(cyan, blue, cyan);
+          background: conic-gradient(blue, blue, blue,rgb(73, 73, 238));
         }
       }
       .rainbow {
