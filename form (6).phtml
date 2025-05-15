@@ -1,0 +1,1028 @@
+<?php
+
+// phpcs:disable Magento2.Templates.ThisInTemplate
+
+/**  @var \Magento\Checkout\Block\Cart\Grid $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+?>
+<?php $mergedCells = ($this->helper(Magento\Tax\Helper\Data::class)->displayCartBothPrices() ? 2 : 1); ?>
+<?= $block->getChildHtml('form_before') ?>
+
+<section id="cart_side_container">
+    <div style="position:relative">
+    <div class="cart_address_block" id="cart_address_block">
+
+        <img src="<?= $this->getViewFileUrl('/images/map_loc_icon.svg'); ?>" alt="location icon" width="18px" height="24px" class="cart_loc_icon"/>
+        <div
+            class="flex w-full flex-col items-center gap-x-4 md:flex-row cart_inner"
+        >
+        <span class="narrowText"
+        >Delivery Address:</span
+        ><span class="light-gray "
+                >There is no address added yet.</span
+                ><button  onclick="toggleModalgooglemap()"
+                    class="highligh-primary"
+            >Add New Address</button
+            >
+        </div>
+      
+
+    </div>
+          <div class="fixed_hover" style="z-index:37"></div>
+    </div>
+    <form action="<?= $escaper->escapeUrl($block->getUrl('checkout/cart/updatePost')) ?>" method="post" id="form-validate"
+          data-mage-init='{"Magento_Checkout/js/action/update-shopping-cart":
+              {"validationURL" : "<?= $escaper->escapeUrl($block->getUrl('checkout/cart/updateItemQty')) ?>",
+              "updateCartActionContainer": "#update_cart_action_container"}}' class="form form-cart">
+        <?= $block->getBlockHtml('formkey') ?>
+        <div class="cart table-wrapper<?= $mergedCells == 2 ? ' detailed' : '' ?>">
+            <?php if ($block->getPagerHtml()) : ?>
+                <div class="cart-products-toolbar cart-products-toolbar-top toolbar"
+                     data-attribute="cart-products-toolbar-top"><?= $block->getPagerHtml() ?>
+                </div>
+            <?php endif ?>
+            <table id="shopping-cart-table" class="cart items data table " data-mage-init='{"shoppingCart":{"emptyCartButton": ".ahaction.ahclear", "updateCartActionContainer": "#update_cart_action_container"}}'>
+                <caption class="table-caption"><?= $escaper->escapeHtml(__('Shopping Cart Items')) ?></caption>
+                <thead>
+                <tr class="heading_cart_tabale">
+                    <th class="col item" scope="col"><span><?= $escaper->escapeHtml(__('Items in your cart')) ?></span></th>
+                </tr>
+                <!--out of stock heading starts here-->
+                <tr>
+                    <th id="padding_remove"> 
+                    <div class="out_of_stock_header  ">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M17.8253 15.5631L10.5051 0.932012C10.2212 0.360864 9.63786 0 9 0C8.36213 0 7.7788 0.360864 7.49491 0.932012L0.174656 15.5631C-0.0832663 16.0849 -0.0538204 16.7028 0.251685 17.1987C0.5572 17.6937 1.09726 17.9965 1.67887 18H16.3211C16.9028 17.9965 17.4428 17.6937 17.7483 17.1987C18.0538 16.7028 18.0832 16.0849 17.8253 15.5631ZM16.5695 16.4864H16.5704C16.5159 16.5721 16.4224 16.624 16.3211 16.6249H1.67883C1.57757 16.624 1.4841 16.5721 1.42957 16.4864C1.37505 16.3956 1.37505 16.2814 1.42957 16.1905L8.73255 1.55079C8.78102 1.44695 8.88487 1.38031 8.99998 1.38031C9.11508 1.38031 9.21894 1.44695 9.2674 1.55079L16.5885 16.1819C16.6379 16.2762 16.631 16.3895 16.5704 16.4769L16.5695 16.4864ZM10.0429 6.72923C10.3294 7.06934 10.4453 7.52105 10.3571 7.95722L9.68286 11.6498V11.649C9.62833 11.9839 9.33926 12.2288 9 12.2288C8.66074 12.2288 8.37166 11.9839 8.31714 11.649L7.64292 7.95635V7.95722C7.55464 7.52105 7.67061 7.06934 7.95709 6.72923C8.21847 6.42548 8.59928 6.25066 9 6.25066C9.40072 6.25066 9.78152 6.42547 10.0429 6.72923ZM9.92346 13.8462C9.92346 14.2191 9.69844 14.5558 9.35311 14.6986C9.00865 14.8422 8.61138 14.7626 8.34741 14.4987C8.08344 14.2347 8.00381 13.8375 8.14748 13.4931C8.29029 13.1478 8.62697 12.9228 9 12.9228C9.24494 12.9228 9.47948 13.0206 9.65257 13.1937C9.82565 13.3668 9.92346 13.6012 9.92346 13.8462Z" fill="#EF0303"/>
+                           </svg>
+                           <div class=" secondary_block_stockout">
+                               <p style="color:#EF0303; font-weight:600">
+                                   <span id="total_out_of_stock">2</span> items are out of stock
+                               </p>
+                               <span style="color:#000; font-weight:100">Out of stock items will be removed when you place your order.</span>
+                           </div>     
+                         </div>
+                    </th>
+                </tr>
+                <!--out of stock heading Ends here-->
+                </thead>
+                <?php foreach ($block->getItems() as $_item) : ?>
+                    <?= $block->getItemHtml($_item) ?>
+                <?php endforeach ?>
+            </table>
+            <!--out of stock table start here for MOBILE-DESEKTOP-->
+            <div class="table-container-outstock">
+                <table id="shopping-cart-table_outStock" class="cart items data table outofstock_item">
+                  <caption class="table-caption">
+                    out of stock items
+                  </caption>
+              <thead>
+                <tr>
+                  <th class="col item betweenClass redText" scope="col">
+                      <span>Out of Stock Items</span>   
+                        <button
+                         title="Remove All"
+                                  class="remove_outstock_item_btn"
+                                  onclick="if (!window.__cfRLUnblockHandlers) return false;"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="10"
+                                    height="10"
+                                    viewBox="0 0 10 10"
+                                    fill="none"
+                                  >
+                                    <path
+                                      d="M5 3.88906L8.88906 0L10 1.11094L6.11094 5L10 8.88906L8.88906 10L5 6.11094L1.11094 10L0 8.88906L3.88906 5L0 1.11094L1.11094 0L5 3.88906Z"
+                                      fill="#4F4F4F"
+                                    ></path>
+                                  </svg>
+                        </button>
+                    </th>
+                </tr>
+              </thead>
+              <!--first item-->
+               <tbody class="cart item headOfTable delete-8870 " style="position: relative">
+                      <tr class="item-info fullCartItem">
+                        <td data-th="Item" class="col item">
+                          <a
+                            href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                            title="Sweet Potato 500g"
+                            tabindex="-1"
+                            class="product-item-photo"
+                          >
+                            <span class="product-image-container product-image-container-8193"
+                              ><span class="product-image-wrapper"
+                                ><img
+                                  class="product-image-photo"
+                                  src="https://demo1.testuatah.com/media/catalog/product/cache/d3909b63068f23f8c7425db8bd75513f/0/8/089686180657-1.JPG"
+                                  loading="lazy"
+                                  width="125"
+                                  height="125"
+                                  alt="Sweet Potato 500g" /></span
+                            ></span>
+                          </a>
+                          <div class="product-item-details">
+                            <strong class="product-item-name halfOpacity">
+                              <a
+                                href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                                >Sweet Potato 500g</a
+                              >
+                            </strong>
+                            <div class="nonDiscount_price halfOpacity">
+                              <span class="curreny_title">QAR</span>
+                              <span class="price_item">1.50</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="col price" data-th="Price">
+                          
+                          <div class="desktop_price halfOpacity">
+                            <span class="curreny_title">QAR</span>
+                            <span class="price_item">1.50</span>
+                          </div>
+                          <p style="color:#EF0303; font-weight:600">OUT OF STOCK</p>
+                        </td>
+                        <td class="col subtotal" style="display: none" data-th="Subtotal">
+                          <span class="price-excluding-tax" data-label="Excl. Tax">
+                            <span class="cart-price">
+                              <span class="price">QAR&nbsp;1.50</span></span
+                            >
+                          </span>
+                        </td>
+                      
+                      </tr>
+                    </tbody>
+              <!--second item-->
+                <tbody class="cart item headOfTable delete-8870 " style="position: relative">
+                      <tr class="item-info fullCartItem">
+                        <td data-th="Item" class="col item">
+                          <a
+                            href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                            title="Sweet Potato 500g"
+                            tabindex="-1"
+                            class="product-item-photo"
+                          >
+                            <span class="product-image-container product-image-container-8193"
+                              ><span class="product-image-wrapper"
+                                ><img
+                                  class="product-image-photo"
+                                  src="https://demo1.testuatah.com/media/catalog/product/cache/d3909b63068f23f8c7425db8bd75513f/0/8/089686180657-1.JPG"
+                                  loading="lazy"
+                                  width="125"
+                                  height="125"
+                                  alt="Sweet Potato 500g" /></span
+                            ></span>
+                          </a>
+                          <div class="product-item-details">
+                            <strong class="product-item-name halfOpacity">
+                              <a
+                                href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                                >Sweet Potato 500g</a
+                              >
+                            </strong>
+                            <div class="nonDiscount_price halfOpacity">
+                              <span class="curreny_title">QAR</span>
+                              <span class="price_item">1.50</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="col price" data-th="Price">
+                          
+                          <div class="desktop_price halfOpacity">
+                            <span class="curreny_title">QAR</span>
+                            <span class="price_item">1.50</span>
+                          </div>
+                          <p style="color:#EF0303; font-weight:600">OUT OF STOCK</p>
+                        </td>
+                        <td class="col subtotal" style="display: none" data-th="Subtotal">
+                          <span class="price-excluding-tax" data-label="Excl. Tax">
+                            <span class="cart-price">
+                              <span class="price">QAR&nbsp;1.50</span></span
+                            >
+                          </span>
+                        </td>
+                      
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--out of stock table ends here-->
+            <?php if ($block->getPagerHtml()) : ?>
+                <div class="cart-products-toolbar cart-products-toolbar-bottom toolbar" data-attribute="cart-products-toolbar-bottom"><?= $block->getPagerHtml() ?></div>
+            <?php endif ?>
+        </div>
+        <div class="cart main actions">
+            <button type="button"
+                    name="update_cart_action"
+                    value="empty_cart"
+                    title="<?= $block->escapeHtmlAttr(__('Clear Shopping Cart')) ?>"
+                    class="action clear ahaction ahclear " id="empty_cart_button">
+                <span><?= $block->escapeHtml(__('Clear Cart')) ?></span>
+            </button>
+
+
+            <input type="hidden" value="" id="update_cart_action_container" data-cart-item-update="" />
+        </div>
+
+    </form>
+</section>
+
+<?= $block->getChildHtml('checkout.cart.order.actions') ?>
+<?= $block->getChildHtml('shopping.cart.table.after') ?>
+<?php
+$quote = $block->getQuote();
+
+/** Get Subtotal */
+$subtotal = $quote->getSubtotal();
+
+/** Get Currency Symbol */
+$currencySymbol =  $quote->getStore()->getCurrentCurrencyCode();?>
+<div class="cart-mobile-footer">
+    <div>
+        <span class="total_for_mobile"><?= $escaper->escapeHtml(__('Total')) ?></span>
+        <span class="currency"><?= $currencySymbol; ?></span>
+        <span class="price"><?php echo $block->escapeHtml(number_format($subtotal, 2)); ?></span>
+    </div>
+    <a class="checkout_outerDiv" href="<?= $block->getUrl('checkout') ?>">
+        <img src="<?php echo $block->getViewFileUrl('images/miniCartIcon.svg'); ?> " alt="cart" class="cart icon" />
+        <span class="mobile_footer_checkout"><?= $escaper->escapeHtml(__('Checkout')) ?></span>
+    </a>
+</div>
+<div class="active cart table-wrapper " id="sidepannel">
+    <div class=" side_bar_outstock head_time "  style="position:fixed">
+                <table id="shopping-cart-table_outStock" class="cart items data table outofstock_item">
+                  <caption class="table-caption">
+                    out of stock items
+                  </caption>
+               <thead>
+                <tr>
+                  <th class="col item betweenClass " scope="col">
+                      <span>ITEMS OUT OF STOCK</span>   
+                      <span style="font-weight:400">We’re sorry, <span style="font-weight:600">2</span> items in your cart are out of stock now </span>
+                        <button
+                         title="Close"
+                                  class="remove_outstock_item_btn"
+                                  onclick="closetheoutstockblock() "
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="10"
+                                    height="10"
+                                    viewBox="0 0 10 10"
+                                    fill="none"
+                                  >
+                                    <path
+                                      d="M5 3.88906L8.88906 0L10 1.11094L6.11094 5L10 8.88906L8.88906 10L5 6.11094L1.11094 10L0 8.88906L3.88906 5L0 1.11094L1.11094 0L5 3.88906Z"
+                                      fill="#4F4F4F"
+                                    ></path>
+                                  </svg>
+                        </button>
+                    </th>
+                </tr>
+              </thead>
+              <!--first item-->
+               <tbody class="cart item headOfTable delete-8870 " style="position: relative">
+                      <tr class="item-info fullCartItem">
+                        <td data-th="Item" class="col item">
+                          <a
+                            href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                            title="Sweet Potato 500g"
+                            tabindex="-1"
+                            class="product-item-photo"
+                          >
+                            <span class="product-image-container product-image-container-8193"
+                              ><span class="product-image-wrapper"
+                                ><img
+                                  class="product-image-photo"
+                                  src="https://demo1.testuatah.com/media/catalog/product/cache/d3909b63068f23f8c7425db8bd75513f/0/8/089686180657-1.JPG"
+                                  loading="lazy"
+                                  width="125"
+                                  height="125"
+                                  alt="Sweet Potato 500g" /></span
+                            ></span>
+                          </a>
+                          <div class="product-item-details">
+                            <strong class="product-item-name halfOpacity">
+                              <a
+                                href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                                >Sweet Potato 500g</a
+                              >
+                            </strong>
+                              <p style="color:#EF0303; font-weight:600">OUT OF STOCK</p>
+                          </div>
+                        </td>
+                      
+                      </tr>
+                    </tbody>
+              <!--second item-->
+                <tbody class="cart item headOfTable delete-8870 " style="position: relative">
+                      <tr class="item-info fullCartItem">
+                        <td data-th="Item" class="col item">
+                          <a
+                            href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                            title="Sweet Potato 500g"
+                            tabindex="-1"
+                            class="product-item-photo"
+                          >
+                            <span class="product-image-container product-image-container-8193"
+                              ><span class="product-image-wrapper"
+                                ><img
+                                  class="product-image-photo"
+                                  src="https://demo1.testuatah.com/media/catalog/product/cache/d3909b63068f23f8c7425db8bd75513f/0/8/089686180657-1.JPG"
+                                  loading="lazy"
+                                  width="125"
+                                  height="125"
+                                  alt="Sweet Potato 500g" /></span
+                            ></span>
+                          </a>
+                          <div class="product-item-details">
+                            <strong class="product-item-name halfOpacity">
+                              <a
+                                href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                                >Sweet Potato 500g</a
+                              >
+                            </strong>
+                              <p style="color:#EF0303; font-weight:600">OUT OF STOCK</p>
+                           
+                          </div>
+                        </td>
+                      
+                      </tr>
+                    </tbody>
+                </table>
+                <div class="checkout_btn_side">
+                        <button class="btn">Remove items and continue</button>
+                </div>
+    </div>
+    <div class="sidefixed_hover" style="z-index:9"></div>
+</div>
+
+<style>
+.side_bar_outstock .betweenClass {
+    flex-direction:column !important;
+    gap:10px;
+    align-items:center;
+}
+.side_bar_outstock .remove_outstock_item_btn {
+    position: absolute;
+    right: 4px;
+    top: 7px;
+    padding: 10px;
+}
+.checkout_btn_side {
+        padding-top: 20px;
+    border-top: 1px dashed #cacaca;
+}
+.checkout_btn_side button {
+    width: 100%;
+    padding: 9px 15px;
+    background-color: #b7d635;
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+}
+.checkout_btn_side button:hover, .checkout_btn_side button:focus, .checkout_btn_side button:active {
+       border: none;
+       background-color: #abc734;
+       color: #fff;
+}  
+.active .sidefixed_hover {
+        display:block ;
+          inset: 0;
+        position: fixed;
+        pointer-events: auto;
+        background: #cacaca;
+        opacity: 0.5;
+     }
+   .side_bar_outstock {
+        border: 1px solid #cacaca;
+        height: -webkit-fill-available;
+        background: #fff;
+        visibility: hidden;
+        padding:20px 8px;
+         opacity: 0;
+         z-index: 10;
+        }
+        .active .side_bar_outstock {
+        visibility: visible;
+         opacity: 1; 
+          
+        }
+  #shopping-cart-table_outStock .betweenClass {
+                padding: 10px !important;
+                font-size: 15px;
+        }
+.table-container-outstock {
+    border: 1px solid #E0E0E0;
+    margin-top: 10px;
+    border-radius: 12px;
+}
+.cart.table-wrapper #shopping-cart-table_outStock {
+        border-collapse: separate !important;
+    }
+
+#shopping-cart-table_outStock .fullCartItem {
+    border-top:1px dashed #cacaca ;
+}
+.remove_outstock_item_btn, .remove_outstock_item_btn:focus, .remove_outstock_item_btn:active {
+    border:none;
+    background-color:transparent;
+}
+
+   .noaddress .fixed_hover {
+        display:block !important;
+          inset: 0;
+        position: fixed;
+        pointer-events: auto;
+        background: #cacaca;
+        opacity: 0.5;
+     }
+     .fixed_hover {
+         display:none;
+     }
+   .noaddress .cart_address_block {
+             position: relative;
+         z-index: 39;
+     }
+    .redText {
+        color:#EF0303;
+        font-weight:600
+    }
+
+    .outofstock_item .product-image-photo {
+            filter: grayscale(1);
+    }
+    .halfOpacity {
+        opacity:0.5;
+    }
+.secondary_block_stockout {
+    justify-content: space-between;
+    width: 100%;
+    align-items: baseline;
+        display: flex;
+}
+.out_of_stock_header {
+    background: #FDF5E9;
+    border-radius: 10px;
+    border: 1px solid #FFE0B0;
+    padding: 12px 10px;
+    gap: 5px;
+    display: flex;
+}
+    .highligh-primary {
+        border:none;
+        color:#064763;
+        font-weight:600;
+        background:none;
+        line-height:16px;
+        cursor:pointer;
+    }
+    .highligh-primary:focus, .highligh-primary:hover , .highligh-primary:active {
+        border:none;
+        background:none;
+        color:#064763;
+        box-shadow:none;
+    }
+    #cart_side_container {
+        width:100%;
+        width:-webkit-fill-available;
+    }
+   
+    .cart_address_block {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        float: left;
+        display:flex;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        gap:5px;
+
+    }
+    .custom-dropdown {
+        position: relative;
+        width: 85px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.3s ease-in-out;
+        border: 1px solid #cacaca;
+    }
+
+    .dropdown-selected {
+        padding: 3px 9px;
+        border-radius: 6px;
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .dropdown-selected:hover {
+        background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
+    }
+
+    .dropdown-selected.open {
+        background: #f5f5f5;
+    }
+
+    .arrow-down {
+        font-size: 12px;
+        margin-left: 8px;
+    }
+
+    .dropdown-options {
+        position: absolute;
+        top: 110%;
+        left: 0;
+        width: 100%;
+        border-radius: 0px 0px 6px 6px;
+        background: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: none;
+        overflow: hidden;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 10;
+    }
+
+    .dropdown-option {
+        padding: 4px 8px;
+        font-weight: 500;
+        color: #333;
+        text-align: left;
+        transition: background 0.3s;
+    }
+
+    .dropdown-option:hover {
+        background: #b7d635;
+        color: #000;
+    }
+
+    .dropdown-options::-webkit-scrollbar {
+        background: #f1f1f1 !important;
+        height: 7px !important;
+        width:5px;
+    }
+
+    .dropdown-options::-webkit-scrollbar-thumb {
+        background: #888 !important;
+        border-radius: 7px;
+    }
+    .light-gray {
+        color: #757575;
+        font-size: 1.6rem;
+        line-height: 1.6rem;
+    }
+    .narrowText {
+        color:#2d2d2a;
+        font-weight:600;
+        line-height: 1.25rem;
+        white-space: nowrap;
+    }
+    @media (max-width: 768px) {
+        .checkout_btn_side {
+            padding:20px 8px;
+        }
+         .active .side_bar_outstock {
+            bottom: 0;
+            top: 45%;
+            width:100%;
+            box-sizing: border-box;
+            transition:all 0.3s ease-in-out;
+            transform: translateY(0);
+        }
+        .side_bar_outstock {
+            transform: translateY(100%);
+                padding: 5px 0px;
+          border-radius: 16px 16px 0px 0px;
+          transition:all 0.3s ease-in-out;
+        }
+      
+         #shopping-cart-table_outStock .items thead+.item {
+                border-top: 1px dashed #d1d1d1;
+        }
+        #shopping-cart-table_outStock {
+            background: #fff;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+      #shopping-cart-table_outStock  .col.price[data-th]:before {
+            content:'' !important;
+        }
+       .outofstock_item .col.price .desktop_price {
+            display:none;
+        }
+        .outofstock_item .col.price {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: end;
+        }
+        
+       .outofstock_item .col.item .product-item-details {
+            justify-content: center;
+        }
+        #padding_remove {
+            padding:0;
+            padding-bottom:5px;
+        }
+        .out_of_stock_header  {
+            align-items:center;
+            padding: 4px 8px;
+                box-sizing: border-box;
+        }
+        .secondary_block_stockout {
+                flex-wrap: wrap;
+                gap:3px;
+                text-align: justify;
+        }
+        .cart_inner {
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: baseline;
+            position: relative;
+            gap:10px
+        }
+        .custom-dropdown {
+            display: none;
+        }
+        .cart_address_block {
+            width:-webkit-fill-available;
+            margin: 0px 8px 8px;
+            padding:12px;
+        }
+        .highligh-primary {
+            position: absolute;
+            right: 0;
+            z-index: 1;
+        }
+        .cart_loc_icon {
+            display:none;
+        }
+          .cart.table-wrapper #shopping-cart-table .col.price {
+        font-size: 14px;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .cart.table-wrapper #shopping-cart-table tr.item-info .product-item-details .cart.item.message.error {
+        display: block !important;
+    }
+
+    .cart.table-wrapper #shopping-cart-table .item .item-info {
+        background-color: #fff;
+        margin-bottom: 5px;
+        border: 1px solid #cdcdcd;
+        padding: 0 5px;
+        border-radius: 8px;
+    }
+
+    .cart.table-wrapper  .col.item {
+        padding: 0px 0 !important;
+    }
+
+    .cart.table-wrapper  .col.item .product-item-details {
+        padding: 8px 0 !important;
+    }
+
+
+
+    .cart.table-wrapper #shopping-cart-table {
+        border-collapse: separate !important;
+        }
+
+    }
+
+    @media (min-width: 769px) {
+        #shopping-cart-table .product-item-details .nonDiscount_price {
+            display:none !important;
+        }
+       .active .side_bar_outstock {
+            right: 0;
+            top: 0;
+            width:450px;
+            transition:all 0.3s ease-in-out;
+            transform: translateX(0);
+        }
+        .side_bar_outstock {
+            transform: translateX(100%);
+        }
+        .checkout-cart-index .cart.table-wrapper .item .col.item {
+                align-items: center;
+        }
+        .mobile-qty-input , #shopping-cart-table_outStock .nonDiscount_price {
+            display: none;
+        }
+        .md\:flex-row {
+            flex-direction: row;
+        }
+        .cart.table-wrapper .cart .col.price .mob_item_price .special-price {
+            color: #db3022;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            column-gap: 10px;
+        }
+
+        .cart.table-wrapper  .cart .col.price .mob_item_price {
+            display: flex;
+            flex-wrap: nowrap;
+            column-gap: 12px;
+            align-items: baseline;
+            font-size: 16px;
+            color: gray;
+            font-weight: 500;
+            flex-direction: row;
+            line-height: normal;
+        }
+
+        .cart.table-wrapper .cart .col.price .desktop_price {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .cart.table-wrapper  .cart .col.price {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 5px !important;
+            gap:5px
+        }
+               .checkout-cart-index .cart-container #form-validate .cart.main.actions {
+            position: absolute;
+            top: 20px;
+            right: 14px;
+        }
+
+        .cart.table-wrapper .item .col.item {
+            padding: 4px 7px !important;
+        }
+
+        .checkout-cart-index .cart-container #form-validate {
+            position: relative;
+            width: -webkit-fill-available;
+        }
+
+        .checkout-cart-index .page-main .page-title-wrapper h1 {
+            font-size: 25px !important;
+            margin-left: 32px;
+        }
+        
+        .cart-container .cart-summary {
+            min-width: 30% !important;
+            padding:15px;
+            margin-bottom: 0;
+        }
+    }
+    
+    @media (min-width:768px){
+      
+
+    .cart.table-wrapper  .cart .col.price .desktop_price {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price {
+        display: flex;
+        flex-wrap: nowrap;
+        column-gap: 12px;
+        align-items: baseline;
+        font-size: 16px;
+        color: gray;
+        font-weight: 500;
+        flex-direction: row;
+        line-height: normal;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price .old-price {
+        line-height: normal !important;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price .special-price {
+        color: #db3022;
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        column-gap: 10px;
+    }
+
+    .cart.table-wrapper .cart .col.price .mob_item_price .special-price .price_item_mob {
+        order: 2;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price .special-price .old-price {
+        font-size: 14px !important;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price .special-price .curreny_title {
+        color: #838383;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .cart.table-wrapper  .cart .col.price .desktop_price .curreny_title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #838383;
+    }
+    }
+</style>
+<script type="text/javascript">
+    require(["jquery"], function ($) {
+        const itemElementCart = document.getElementById('ah_ask_confirmation');
+        const itemElementEmpty = document.getElementById('full_cart_del');
+
+        // Toggle visibility of full cart message
+        if (itemElementCart) {
+            itemElementCart.addEventListener('click', function () {
+                itemElementEmpty.style.display = (itemElementEmpty.style.display === "none") ? "block" : "none";
+            });
+        }
+        //Plus /minus submit form
+        $('.qty-plus,.qty-minus').on("click", function () {
+            let inputElem = $(this).parents('.qty-control').find('input');
+            let itemId = inputElem.attr('data-cart-item-id');
+            let currentQty = inputElem.val();
+            if ($(this).hasClass('qty-plus')) {
+                inputElem.val(parseInt(currentQty) + parseInt(1));
+            } else {
+                if (currentQty > 1) {
+                    inputElem.val(parseInt(currentQty) - parseInt(1));
+                }else{
+                    delCartItem(itemId);
+                    return;
+                }
+            }
+            $("#form-validate").submit();
+        });
+        //Onchange dropdown submit form
+        $(".custom-dropdown").each(function () {
+            var $dropdown = $(this);
+            var $selected = $dropdown.find(".dropdown-selected");
+            var $options = $dropdown.find(".dropdown-options");
+            var itemId = $dropdown.attr("id").split("-")[1];
+            var $hiddenInput = $("#cart-" + itemId + "-qty");
+            var $mobileInput = $("#cart-mobile-" + itemId + "-qty");
+
+            // Toggle dropdown visibility
+            $selected.on("click", function (e) {
+                e.stopPropagation();
+                $(".dropdown-options").not($options).hide();
+                $options.toggle();
+                $selected.toggleClass("open");
+            });
+
+            // Handle option selection
+            $options.find(".dropdown-option").on("click", function () {
+                var selectedValue = $(this).attr("data-value");
+
+                // Update dropdown UI
+                $selected.text(selectedValue);
+                $selected.attr("data-selected", selectedValue);
+                $selected.append('<span class="arrow-down">▼</span>');
+                $options.hide();
+                $selected.removeClass("open");
+
+                // Sync values across all input fields
+                $hiddenInput.val(selectedValue).trigger("change");
+                $mobileInput.val(selectedValue).trigger("change");
+
+                // Submit form if needed
+                if (selectedValue < 1) {
+                    delCartItem(itemId);
+                } else {
+                    $("#form-validate").submit();
+                }
+            });
+
+            // Sync mobile input changes with dropdown
+            $mobileInput.on("input", function () {
+                var newQty = $(this).val();
+                $selected.text(newQty);
+                $selected.append('<span class="arrow-down">▼</span>');
+                $hiddenInput.val(newQty);
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on("click", function () {
+                $options.hide();
+                $selected.removeClass("open");
+            });
+        });
+
+        // Restore original change event
+        $('.ah-qty').on("change", function () {
+            let currentQty = $(this).val();
+            let itemId = $(this).attr('data-cart-item-id');
+
+            if (currentQty < 1) {
+                delCartItem(itemId);
+                return;
+            }
+            $("#form-validate").submit();
+        });
+
+        function delCartItem(itemId) {
+            const divp = document.querySelector('.delete-' + itemId);
+            if (divp) {
+                // Check if divp has a parent or ancestor with the class '.action.action-delete'
+                const deleteButton = divp.querySelector(".action.action-delete");
+                if (deleteButton) {
+                    divp.classList.add('deletedItem');
+                    deleteButton.click();
+                }
+                setTimeout(function() {
+                    divp.style.display = "none";
+                    divp.style.visibility = 'hidden';
+                }, 300);
+            }
+        }
+
+        $('.delBtnCart').on('click', function() {
+            var itemId = $(this).attr('data-item-id');
+            delCartItem(itemId);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const cartItem = document.querySelectorAll('.fullCartItem');
+        const itemHead = document.querySelectorAll('.headOfTable');
+    
+         
+        function slideToLeft() {
+            var startX;
+            cartItem.forEach((item, index) => {
+                item.addEventListener('touchstart', function(e) {
+                    var touch = e.touches[0];
+                    startX = touch.clientX;
+                });
+                item.addEventListener('touchmove', function(e) {
+                    var touch = e.touches[0];
+                    var change = startX - touch.clientX;
+                    if (change > 30) {
+                        item.classList.add('slide-left');
+                        itemHead[index].classList.add('itemSlided');
+                    } else if (change < -30) {
+                        item.classList.remove('slide-left');
+                        itemHead[index].classList.remove('itemSlided');
+                    }
+                });
+            });
+        }
+    
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 641) {} else {
+                slideToLeft();
+            }
+        });
+        slideToLeft();
+
+    });
+</script>
+<script>
+  function closetheoutstockblock() {
+       const sidepannel = document.getElementById('sidepannel');
+      if (sidepannel) {
+            sidepannel.classList.remove('active');
+        } else {
+            console.error("Element with ID 'sidepannel' not found.");
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        // Check if longitude and latitude exist in localStorage
+        let longitude = localStorage.getItem("longitude");
+        let latitude = localStorage.getItem("latitude");
+
+        let miniMapHeader = document.getElementById("mini_map_header");
+
+        // Select all checkout buttons
+        let checkoutButtons = document.querySelectorAll(".checkout.primary");
+
+        if (longitude && latitude) {
+            miniMapHeader.style.display = "none"; // Hide mini map info
+            checkoutButtons.forEach(button => {
+                button.style.display = "none"; // Hide checkout button
+                button.disabled = true; // Disable button
+            });
+        } else {
+            miniMapHeader.style.display = "block"; // Show mini map info
+            checkoutButtons.forEach(button => {
+                button.style.display = "block"; // Show checkout button
+                button.disabled = false; // Enable button
+            });
+        }
+    });
+</script>
