@@ -1,0 +1,76 @@
+<div class="important-links">
+  <div class="title information footTitle"><?= __('INFORMATIONS') ?></div>
+  <ul class="footer links show_in_web">
+    <li class="nav item">
+      <a href="<?php echo $this->getBaseUrl(); ?>faq" title="<?= __('F.A.Q’s') ?>"><?= __('F.A.Q’s') ?></a>
+    </li>
+    <li class="nav item">
+      <a href="<?php echo $this->getBaseUrl(); ?>about-us" title="<?= __('About us') ?>"><?= __('About us') ?></a>
+    </li>
+    <li class="nav item">
+      <a href="<?php echo $this->getBaseUrl(); ?>delivery-policy" title="<?= __('Delivery Information') ?>">
+        <?= __('Delivery Information') ?>
+      </a>
+    </li>
+  </ul>
+  <!--new code for mobile-->
+  <ul class="footer links information-info opeinigClass show_in_mob">
+         <li class="nav item">
+      <a href="<?php echo $this->getBaseUrl(); ?>faq" title="<?= __('F.A.Q’s') ?>"><?= __('F.A.Q’s') ?></a>
+    </li>
+    <li class="nav item">
+      <a href="<?php echo $this->getBaseUrl(); ?>about-us" title="<?= __('About us') ?>"><?= __('About us') ?></a>
+    </li>
+    <li class="nav item">
+      <a href="<?php echo $this->getBaseUrl(); ?>delivery-policy" title="<?= __('Delivery Information') ?>">
+        <?= __('Delivery Information') ?>
+      </a>
+    </li>
+        <li class="nav item ">
+      <a href="<?= $this->getBaseUrl(); ?>privacy-policy" title="<?= __('Privacy Policy') ?>"><?= __('Privacy Policy') ?></a>
+    </li>
+    <li class="nav item ">
+      <a href="<?= $this->getBaseUrl(); ?>terms-conditions" title="<?= __('Terms & Conditions') ?>"><?= __('Terms & Conditions') ?></a>
+    </li>
+    <li class="nav item">
+      <a href="https://api.whatsapp.com/send/?phone=97460094446&text=Hi,%20Can%20you%20assist%20me?&app_absent=0" title="<?= __('Contact us') ?>" target="_blank"><?= __('Contact us') ?></a>
+    </li>
+    <li class="nav item">
+      <a href="<?= $this->getBaseUrl(); ?>sales/guest/form" title="<?= __('Orders and Returns') ?>"><?= __('Orders and Returns') ?></a>
+    </li>
+    <li class="nav item">
+      <a href="<?= $this->getBaseUrl(); ?>brand" title="<?= __('Brands') ?>"><?= __('Brands') ?></a>
+    </li>
+  </ul>
+</div>
+<style>
+    @media (min-width:769px) {
+        .show_in_mob {
+            display:none !important;
+        }
+    }
+    @media (max-width:768px){
+        .show_in_web {
+            display:none !important;
+        }
+    }
+
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    let lazyImages = document.querySelectorAll("img.lazyload");
+
+    const lazyLoad = () => {
+        lazyImages.forEach(img => {
+            if (img.getBoundingClientRect().top < window.innerHeight && img.dataset.src) {
+                img.src = img.dataset.src;
+                img.classList.remove("lazyload");
+            }
+        });
+    };
+
+    window.addEventListener("scroll", lazyLoad);
+    lazyLoad();
+});
+
+</script>
