@@ -1,0 +1,1171 @@
+<?php
+use Ahmarket\Core\Helper\StockSourceHelper;
+// phpcs:disable Magento2.Templates.ThisInTemplate
+
+/**  @var \Magento\Checkout\Block\Cart\Grid $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Checkout\Block\Cart\Grid $block */
+$imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$stocksourceHelper = $objectManager->get(StockSourceHelper::class);
+$restrictedZones = $stocksourceHelper->getAllStockSourcesZone();
+$outOfStockItems=[];
+$zoneNumber =(isset($_COOKIE['zone']))? $_COOKIE['zone']:0;
+?>
+<?php $mergedCells = ($this->helper(Magento\Tax\Helper\Data::class)->displayCartBothPrices() ? 2 : 1); ?>
+<?= $block->getChildHtml('form_before') ?>
+<style>
+
+
+  .stopScroll {
+        overflow: hidden !important;
+    }
+.secondary_block_stockout {
+    justify-content: space-between;
+    width: 100%;
+    align-items: baseline;
+        display: flex;
+}
+  .optional_message {
+            display:none;
+        }
+.ah-out-of-stock{display:none;}
+.side_bar_outstock .betweenClass {
+    flex-direction:column !important;
+    gap:10px;
+    align-items:center;
+}
+.side_bar_outstock .remove_outstock_item_btn {
+    position: absolute;
+    right: 4px;
+    top: 7px;
+    padding: 10px;
+}
+.checkout_btn_side {
+        padding-top: 20px;
+    border-top: 1px dashed #cacaca;
+}
+.checkout_btn_side button {
+    width: 100%;
+    padding: 9px 15px;
+    background-color: #b7d635;
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+}
+.checkout_btn_side button:hover, .checkout_btn_side button:focus, .checkout_btn_side button:active {
+       border: none;
+       background-color: #abc734;
+       color: #fff;
+}  
+.active .sidefixed_hover {
+        display:block ;
+          inset: 0;
+        position: fixed;
+        pointer-events: auto;
+        background: #cacaca;
+        opacity: 0.5;
+     }
+   .side_bar_outstock {
+        border: 1px solid #cacaca;
+        height: -webkit-fill-available;
+        background: #fff;
+        visibility: hidden;
+        padding:20px 8px;
+         opacity: 0;
+         z-index: 10;
+        }
+        .active .side_bar_outstock {
+        visibility: visible;
+         opacity: 1; 
+          overflow-y:auto;
+          padding-bottom:50px !important;
+        }
+  #shopping-cart-table_outStock .betweenClass {
+                padding: 10px !important;
+                font-size: 15px;
+        }
+
+.cart.table-wrapper #shopping-cart-table_outStock {
+        border-collapse: separate !important;
+    }
+
+#shopping-cart-table_outStock .fullCartItem {
+    border-top:1px dashed #cacaca ;
+}
+.remove_outstock_item_btn, .remove_outstock_item_btn:focus, .remove_outstock_item_btn:active {
+    border:none;
+    background-color:transparent;
+}
+
+   .noaddress .fixed_hover {
+        display:block !important;
+          inset: 0;
+        position: fixed;
+        pointer-events: auto;
+        background: #cacaca;
+        opacity: 0.5;
+     }
+       .noaddress .cart_address_block {
+             position: relative;
+         z-index: 39;
+     }
+ .noaddress .blink-border {
+            animation: blink 1s infinite alternate;
+            border-width: 2px;
+           border-style: solid;
+        }
+         @keyframes blink {
+            0% { border-color: #eb8d8d; }
+            100% { border-color: transparent; }
+        }
+     .fixed_hover {
+         display:none;
+     }
+   .noaddress .cart_address_block {
+             position: relative;
+         z-index: 39;
+     }
+    .redText {
+        color:#EF0303;
+        font-weight:600
+    }
+
+    .outofstock_item .product-image-photo {
+            filter: grayscale(1);
+    }
+
+
+    .highligh-primary {
+        border:none;
+        color:#064763;
+        font-weight:600;
+        background:none;
+        line-height:16px;
+        cursor:pointer;
+    }
+    .highligh-primary:focus, .highligh-primary:hover , .highligh-primary:active {
+        border:none;
+        background:none;
+        color:#064763;
+        box-shadow:none;
+    }
+    #cart_side_container {
+        width:100%;
+        width:-webkit-fill-available;
+    }
+   
+    .cart_address_block {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        float: left;
+        display:flex;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        gap:5px;
+
+    }
+    .custom-dropdown {
+        position: relative;
+        width: 85px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.3s ease-in-out;
+        border: 1px solid #cacaca;
+    }
+
+    .dropdown-selected {
+        padding: 3px 9px;
+        border-radius: 6px;
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .dropdown-selected:hover {
+        background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
+    }
+
+    .dropdown-selected.open {
+        background: #f5f5f5;
+    }
+
+    .arrow-down {
+        font-size: 12px;
+        margin-left: 8px;
+    }
+
+    .dropdown-options {
+        position: absolute;
+        top: 110%;
+        left: 0;
+        width: 100%;
+        border-radius: 0px 0px 6px 6px;
+        background: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: none;
+        overflow: hidden;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 10;
+    }
+
+    .dropdown-option {
+        padding: 4px 8px;
+        font-weight: 500;
+        color: #333;
+        text-align: left;
+        transition: background 0.3s;
+    }
+
+    .dropdown-option:hover {
+        background: #b7d635;
+        color: #000;
+    }
+
+    .dropdown-options::-webkit-scrollbar {
+        background: #f1f1f1 !important;
+        height: 7px !important;
+        width:5px;
+    }
+
+    .dropdown-options::-webkit-scrollbar-thumb {
+        background: #888 !important;
+        border-radius: 7px;
+    }
+      .light-gray {
+    color: #757575;
+    font-size: 16px;
+    line-height: 20px;
+    max-width: 370px;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+}
+    .narrowText {
+        color:#2d2d2a;
+        font-weight:600;
+        line-height: 1.25rem;
+        white-space: nowrap;
+    }
+    .out_of_stock_header {
+    background: #FDF5E9;
+    border-radius: 10px;
+    border: 1px solid #FFE0B0;
+    padding: 12px 10px;
+    gap: 5px;
+    display: flex;
+}
+.cart-mobile-footer.noaddress .checkout_outerDiv {
+    pointer-events: none;
+    opacity: 0.5;
+}
+    @media (max-width: 768px) {
+         #padding_remove {
+            padding:0;
+            padding-bottom:5px;
+        }
+          .out_of_stock_header  {
+            align-items:center;
+            padding: 4px 8px;
+                box-sizing: border-box;
+        }
+         .secondary_block_stockout {
+                flex-wrap: wrap;
+                gap:3px;
+                text-align: justify;
+        }
+          .noaddress .optional_message {
+            display:block ;
+        }
+        .light-gray { 
+            font-size: 14px;
+            line-height: 16px;
+            max-width: 320px;
+        }
+            .optional_message {
+              position: fixed;
+            bottom: 59px;
+            font-size: 13px;
+            background: #FDF5E9;
+            color: #EF0303;
+            width: 100%;
+            left: 0;
+            word-spacing: 1px;
+            letter-spacing: 1px;
+            padding: 3px;
+            font-weight: 600;
+        }
+        .checkout_btn_side {
+            padding:20px 8px;
+        }
+         .active .side_bar_outstock {
+            bottom: 0;
+            top: 45%;
+            width:100%;
+            box-sizing: border-box;
+            transition:all 0.3s ease-in-out;
+            transform: translateY(0);
+        }
+        .side_bar_outstock {
+            transform: translateY(100%);
+                padding: 5px 0px;
+          border-radius: 16px 16px 0px 0px;
+          transition:all 0.3s ease-in-out;
+        }
+      
+         #shopping-cart-table_outStock .items thead+.item {
+                border-top: 1px dashed #d1d1d1;
+        }
+        #shopping-cart-table_outStock {
+            background: #fff;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+      #shopping-cart-table_outStock  .col.price[data-th]:before {
+            content:'' !important;
+        }
+       .outofstock_item .col.price .desktop_price {
+            display:none;
+        }
+        .outofstock_item .col.price {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: end;
+            padding:8px 10px !important;
+        }
+        
+       .outofstock_item .col.item .product-item-details {
+            justify-content: center;
+        }
+        .cart_inner {
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: baseline;
+            position: relative;
+            gap:10px
+        }
+        .custom-dropdown {
+            display: none;
+        }
+        .cart_address_block {
+            width:-webkit-fill-available;
+            margin: 0px 8px 8px;
+            padding:12px;
+        }
+        .highligh-primary {
+            position: absolute;
+            right: 0;
+            z-index: 1;
+        }
+        .cart_loc_icon {
+            display:none;
+        }
+          .cart.table-wrapper #shopping-cart-table .col.price {
+        font-size: 14px;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .cart.table-wrapper #shopping-cart-table tr.item-info .product-item-details .cart.item.message.error {
+        display: block !important;
+    }
+
+    .cart.table-wrapper #shopping-cart-table .item .item-info {
+        background-color: #fff;
+        margin-bottom: 5px;
+        border: 1px solid #cdcdcd;
+        padding: 0 5px;
+        border-radius: 8px;
+    }
+
+    .cart.table-wrapper  .col.item {
+        padding: 0px 0 !important;
+    }
+
+    .cart.table-wrapper  .col.item .product-item-details {
+        padding: 8px 0 !important;
+    }
+
+
+
+    .cart.table-wrapper #shopping-cart-table {
+        border-collapse: separate !important;
+        }
+
+    }
+
+    @media (min-width: 769px) {
+    .table-container-outstock {
+      margin-top:20px;
+    }
+       .active .side_bar_outstock {
+            right: 0;
+            top: 0;
+            width:450px;
+            transition:all 0.3s ease-in-out;
+            transform: translateX(0);
+        }
+        .side_bar_outstock {
+            transform: translateX(100%);
+        }
+        .checkout-cart-index .cart.table-wrapper .item .col.item {
+                align-items: center;
+        }
+        .mobile-qty-input , #shopping-cart-table_outStock .nonDiscount_price {
+            display: none;
+        }
+        .md\:flex-row {
+            flex-direction: row;
+        }
+        .cart.table-wrapper .cart .col.price .mob_item_price .special-price {
+            color: #db3022;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            column-gap: 10px;
+        }
+
+        .cart.table-wrapper  .cart .col.price .mob_item_price {
+            display: flex;
+            flex-wrap: nowrap;
+            column-gap: 12px;
+            align-items: baseline;
+            font-size: 16px;
+            color: gray;
+            font-weight: 500;
+            flex-direction: row;
+            line-height: normal;
+        }
+
+        .cart.table-wrapper .cart .col.price .desktop_price {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .cart.table-wrapper  .cart .col.price {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 5px !important;
+            gap:5px
+        }
+               .checkout-cart-index .cart-container #form-validate .cart.main.actions {
+            position: absolute;
+            top: 20px;
+            right: 14px;
+        }
+
+        .cart.table-wrapper .item .col.item {
+            padding: 4px 7px !important;
+        }
+
+        .checkout-cart-index .cart-container #form-validate {
+            position: relative;
+            width: -webkit-fill-available;
+        }
+
+        .checkout-cart-index .page-main .page-title-wrapper h1 {
+            font-size: 25px !important;
+            margin-left: 32px;
+        }
+        
+        .cart-container .cart-summary {
+            min-width: 30% !important;
+            padding:15px;
+            margin-bottom: 0;
+        }
+    }
+    
+    @media (min-width:768px){
+      
+
+    .cart.table-wrapper  .cart .col.price .desktop_price {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price {
+        display: flex;
+        flex-wrap: nowrap;
+        column-gap: 12px;
+        align-items: baseline;
+        font-size: 16px;
+        color: gray;
+        font-weight: 500;
+        flex-direction: row;
+        line-height: normal;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price .old-price {
+        line-height: normal !important;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price .special-price {
+        color: #db3022;
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        column-gap: 10px;
+    }
+
+    .cart.table-wrapper .cart .col.price .mob_item_price .special-price .price_item_mob {
+        order: 2;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price .special-price .old-price {
+        font-size: 14px !important;
+    }
+
+    .cart.table-wrapper  .cart .col.price .mob_item_price .special-price .curreny_title {
+        color: #838383;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .cart.table-wrapper  .cart .col.price .desktop_price .curreny_title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #838383;
+    }
+    }
+</style>
+<section id="cart_side_container" style="width:100%">
+    <div class="caution_block " >  <img src="<?= $this->getViewFileUrl('/images/pngcautionsm.png'); ?>" alt="caution" width="18px" height="24px" /> <span>Due to high order volume, deliveries may be delayed. We appreciate your patience and understanding.</span></div>
+    <div style="position:relative">
+    <div class="cart_address_block blink-border" id="cart_address_block" style="display:none">
+        <img src="<?= $this->getViewFileUrl('/images/map_loc_icon.svg'); ?>" alt="location icon" width="18px" height="24px" class="cart_loc_icon"/>
+        <div class="flex w-full flex-col items-center gap-x-4 md:flex-row cart_inner">
+            <span class="narrowText"><?= $escaper->escapeHtml(__('Delivery Address:')) ?></span>
+            <span class="light-gray" id="user_map_address" ><?= $escaper->escapeHtml(__('There is no address added yet.')) ?></span>
+            <button  onclick="toggleModalgooglemap()" class="highligh-primary" id="change-new-address"><?= $escaper->escapeHtml(__('Add New Address')) ?></button>
+        </div>
+    </div>
+          <div class="fixed_hover" style="z-index:37"></div>
+    </div>
+    
+    <form action="<?= $escaper->escapeUrl($block->getUrl('checkout/cart/updatePost')) ?>" method="post" id="form-validate"
+          data-mage-init='{"Magento_Checkout/js/action/update-shopping-cart":
+              {"validationURL" : "<?= $escaper->escapeUrl($block->getUrl('checkout/cart/updateItemQty')) ?>",
+              "updateCartActionContainer": "#update_cart_action_container"}}' class="form form-cart">
+        <?= $block->getBlockHtml('formkey') ?>
+        <div class="cart table-wrapper<?= $mergedCells == 2 ? ' detailed' : '' ?>">
+            <?php if ($block->getPagerHtml()) : ?>
+                <div class="cart-products-toolbar cart-products-toolbar-top toolbar"
+                     data-attribute="cart-products-toolbar-top"><?= $block->getPagerHtml() ?>
+                </div>
+            <?php endif ?>
+            <table id="shopping-cart-table" class="cart items data table " data-mage-init='{"shoppingCart":{"emptyCartButton": ".ahaction.ahclear", "updateCartActionContainer": "#update_cart_action_container"}}'>
+                <caption class="table-caption"><?= $escaper->escapeHtml(__('Shopping Cart Items')) ?></caption>
+                <thead>
+                <tr class="heading_cart_tabale">
+                    <th class="col item" scope="col"><span><?= $escaper->escapeHtml(__('Items in your cart')) ?></span></th>
+                </tr>
+                 <!--out of stock heading starts here-->
+                <tr class="ah-out-of-stock" >
+                    <th id="padding_remove"> 
+                    <div class="out_of_stock_header  ">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M17.8253 15.5631L10.5051 0.932012C10.2212 0.360864 9.63786 0 9 0C8.36213 0 7.7788 0.360864 7.49491 0.932012L0.174656 15.5631C-0.0832663 16.0849 -0.0538204 16.7028 0.251685 17.1987C0.5572 17.6937 1.09726 17.9965 1.67887 18H16.3211C16.9028 17.9965 17.4428 17.6937 17.7483 17.1987C18.0538 16.7028 18.0832 16.0849 17.8253 15.5631ZM16.5695 16.4864H16.5704C16.5159 16.5721 16.4224 16.624 16.3211 16.6249H1.67883C1.57757 16.624 1.4841 16.5721 1.42957 16.4864C1.37505 16.3956 1.37505 16.2814 1.42957 16.1905L8.73255 1.55079C8.78102 1.44695 8.88487 1.38031 8.99998 1.38031C9.11508 1.38031 9.21894 1.44695 9.2674 1.55079L16.5885 16.1819C16.6379 16.2762 16.631 16.3895 16.5704 16.4769L16.5695 16.4864ZM10.0429 6.72923C10.3294 7.06934 10.4453 7.52105 10.3571 7.95722L9.68286 11.6498V11.649C9.62833 11.9839 9.33926 12.2288 9 12.2288C8.66074 12.2288 8.37166 11.9839 8.31714 11.649L7.64292 7.95635V7.95722C7.55464 7.52105 7.67061 7.06934 7.95709 6.72923C8.21847 6.42548 8.59928 6.25066 9 6.25066C9.40072 6.25066 9.78152 6.42547 10.0429 6.72923ZM9.92346 13.8462C9.92346 14.2191 9.69844 14.5558 9.35311 14.6986C9.00865 14.8422 8.61138 14.7626 8.34741 14.4987C8.08344 14.2347 8.00381 13.8375 8.14748 13.4931C8.29029 13.1478 8.62697 12.9228 9 12.9228C9.24494 12.9228 9.47948 13.0206 9.65257 13.1937C9.82565 13.3668 9.92346 13.6012 9.92346 13.8462Z" fill="#EF0303"/>
+                           </svg>
+                           <div class="secondary_block_stockout">
+                               <p style="color:#EF0303; font-weight:600">
+                                   <span id="total_out_of_stock">0</span> <?= $escaper->escapeHtml(__('items are out of stock')) ?>
+                               </p>
+                               <span style="color:#000; font-weight:100"><?= $escaper->escapeHtml(__('Out of stock items will be removed when you place your order.')) ?></span>
+                           </div>     
+                         </div>
+                    </th>
+                </tr>
+                <!--out of stock heading Ends here-->
+                </thead>
+                <?php  $groceryItems=0;
+                    $nonGroceryItems=0; 
+                    foreach ($block->getItems() as $_item) :
+                    $categoryIds =$_item->getProductCategoryIds();  // Get category IDs as an array
+                    // Convert to an array
+                    $categoryIdsArray = explode(',', $categoryIds);
+                    if($_item->getHasError() || (in_array(3,$categoryIdsArray) && !in_array($zoneNumber,$restrictedZones) && $zoneNumber>0)){
+                        $outOfStockItems[] = $_item;
+                        ((in_array(3,$categoryIdsArray) && !in_array($zoneNumber,$restrictedZones) && $zoneNumber>0))? $groceryItems++:$nonGroceryItems++;
+                    }else{ ?>
+                    <?= $block->getItemHtml($_item) ?>
+                <?php }
+                endforeach ?>
+            </table>
+              <!--out of stock table start here for MOBILE-DESEKTOP-->
+            <div class="table-container-outstock">
+                <table id="shopping-cart-table_outStock" class="cart items data table outofstock_item">
+                  <caption class="table-caption">
+                    Express Items
+                  </caption>
+              <thead>
+                <tr>
+                  <th class="col item betweenClass redText" scope="col">
+                      <span>Express Items</span>   
+                        <button
+                         title="Remove All"
+                                  class="remove_outstock_item_btn"
+                                  onclick="if (!window.__cfRLUnblockHandlers) return false;"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="10"
+                                    height="10"
+                                    viewBox="0 0 10 10"
+                                    fill="none"
+                                  >
+                                    <path
+                                      d="M5 3.88906L8.88906 0L10 1.11094L6.11094 5L10 8.88906L8.88906 10L5 6.11094L1.11094 10L0 8.88906L3.88906 5L0 1.11094L1.11094 0L5 3.88906Z"
+                                      fill="#4F4F4F"
+                                    ></path>
+                                  </svg>
+                        </button>
+                    </th>
+                </tr>
+              </thead>
+              
+               <tbody class="cart item headOfTable delete-8870 " style="position: relative">
+                   <!--first item-->
+                      <tr class="item-info fullCartItem">
+                        <td data-th="Item" class="col item">
+                          <a
+                            href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                            title="Sweet Potato 500g"
+                            tabindex="-1"
+                            class="product-item-photo"
+                          >
+                            <span class="product-image-container product-image-container-8193"
+                              ><span class="product-image-wrapper"
+                                ><img
+                                  class="product-image-photo"
+                                  src="https://demo1.testuatah.com/media/catalog/product/cache/d3909b63068f23f8c7425db8bd75513f/0/8/089686180657-1.JPG"
+                                  loading="lazy"
+                                  width="125"
+                                  height="125"
+                                  alt="Sweet Potato 500g" /></span
+                            ></span>
+                          </a>
+                          <div class="product-item-details">
+                            <strong class="product-item-name halfOpacity">
+                              <a
+                                href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                                >Sweet Potato 500g</a
+                              >
+                            </strong>
+                          </div>
+                        </td>
+                        <td class="col price" data-th="Price">
+                          <p style="color:#EF0303; font-weight:600">Express Item</p>
+                        </td>
+                      
+                      </tr>
+              <!--second item-->
+                      <tr class="item-info fullCartItem">
+                        <td data-th="Item" class="col item">
+                          <a
+                            href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                            title="Sweet Potato 500g"
+                            tabindex="-1"
+                            class="product-item-photo"
+                          >
+                            <span class="product-image-container product-image-container-8193"
+                              ><span class="product-image-wrapper"
+                                ><img
+                                  class="product-image-photo"
+                                  src="https://demo1.testuatah.com/media/catalog/product/cache/d3909b63068f23f8c7425db8bd75513f/0/8/089686180657-1.JPG"
+                                  loading="lazy"
+                                  width="125"
+                                  height="125"
+                                  alt="Sweet Potato 500g" /></span
+                            ></span>
+                          </a>
+                          <div class="product-item-details">
+                            <strong class="product-item-name halfOpacity">
+                              <a
+                                href="https://demo1.testuatah.com/en/sweet-potato-uganda-500g-9116260000000-qatar.html"
+                                >Sweet Potato 500g</a
+                              >
+                            </strong>
+                            <div class="nonDiscount_price halfOpacity">
+                              <span class="curreny_title">QAR</span>
+                              <span class="price_item">1.50</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="col price" data-th="Price">
+                          
+                          <div class="desktop_price halfOpacity">
+                            <span class="curreny_title">QAR</span>
+                            <span class="price_item">1.50</span>
+                          </div>
+                          <p style="color:#EF0303; font-weight:600">Express Item</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--out of stock table ends here-->
+            <?php if ($block->getPagerHtml()) : ?>
+                <div class="cart-products-toolbar cart-products-toolbar-bottom toolbar" data-attribute="cart-products-toolbar-bottom"><?= $block->getPagerHtml() ?></div>
+            <?php endif ?>
+        </div>
+        <div class="cart main actions">
+            <button type="button"
+                    name="update_cart_action"
+                    value="empty_cart"
+                    title="<?= $block->escapeHtmlAttr(__('Clear Shopping Cart')) ?>"
+                    class="action clear ahaction ahclear " id="empty_cart_button">
+                <span><?= $block->escapeHtml(__('Clear Cart')) ?></span>
+            </button>
+            <button type="submit"
+                    name="update_cart_action"
+                    data-cart-item-update=""
+                    value="update_qty"
+                    title="<?= $block->escapeHtml(__('Update Shopping Cart')) ?>"
+                    class="action update hidden">
+                <span><?= $block->escapeHtml(__('Update Shopping Cart')) ?></span>
+            </button>
+            <input type="hidden" value="" id="update_cart_action_container" data-cart-item-update="" />
+        </div>
+    </form>
+</section>
+<?php if (!empty($outOfStockItems)) : ?>
+<div class="active cart table-wrapper " id="sidepannel">
+    <div class=" side_bar_outstock head_time "  style="position:fixed">
+            <table id="shopping-cart-table_outStock" class="cart items data table outofstock_item">
+              <caption class="table-caption">
+                <?= $escaper->escapeHtml(__('Out of stock items')) ?>
+              </caption>
+            <thead>
+            <tr>
+              <th class="col item betweenClass " scope="col">
+                  <span><?= $escaper->escapeHtml(__('ITEMS OUT OF STOCK')) ?></span>   
+                  <span style="font-weight:400"><?= __('We’re sorry,') ?><?php if($nonGroceryItems>0): ?> <span style="font-weight:600; " id="ah-out-of-stock">(<?= __($nonGroceryItems); ?>)</span> <?= __(' items in your cart are out of stock now.') ?><br> <?php endif;?>
+                  <?php if($groceryItems>0): ?><span style="font-weight:600" id="ah-express">(<?= __($groceryItems); ?>)</span><?= __(' items. Express delivery is not available for zone ')?> (<?= __($zoneNumber); ?>). <?= (' Please remove express delivery items from the cart or change the address.') ?><?php endif;?> </span>
+                </span>
+                    <button
+                     title="Close" class="remove_outstock_item_btn" onclick="closetheoutstockblock()">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="10"
+                                height="10"
+                                viewBox="0 0 10 10"
+                                fill="none">
+                                <path d="M5 3.88906L8.88906 0L10 1.11094L6.11094 5L10 8.88906L8.88906 10L5 6.11094L1.11094 10L0 8.88906L3.88906 5L0 1.11094L1.11094 0L5 3.88906Z"
+                                  fill="#4F4F4F"></path>
+                              </svg>
+                    </button>
+                </th>
+            </tr>
+          </thead>
+          <!-- Out-of-Stock Items Section -->
+            <?php foreach ($outOfStockItems as $item) : 
+            // Get product thumbnail image URL
+            $product=$item->getProduct();
+            $productImage = $imageHelper->init($product, 'cart_page_product_thumbnail')->getUrl(); ?>
+               <tbody class="cart item headOfTable delete-<?= $item->getItemId(); ?>" style="position: relative">
+                  <tr class="item-info fullCartItem">
+                    <td data-th="Item" class="col item">
+                      <a
+                        href="<?= $escaper->escapeUrl($product->getProductUrl()) ?>" title="<?= $escaper->escapeHtml($product->getName()) ?>"
+                        tabindex="-1"
+                        class="product-item-photo">
+                        <span class="product-image-container product-image-container-<?= $product->getId(); ?>">
+                            <span class="product-image-wrapper">
+                              <img
+                              class="product-image-photo"
+                              src="<?= $escaper->escapeUrl($productImage) ?>"
+                              loading="lazy"
+                              width="125"
+                              height="125"
+                              alt="<?= $escaper->escapeHtml($item->getName()) ?>" />
+                            </span>
+                        </span>
+                      </a>
+                      <div class="product-item-details">
+                        <strong class="product-item-name halfOpacity">
+                          <a href="<?= $escaper->escapeUrl($product->getProductUrl()) ?>" title="<?= $escaper->escapeHtml($product->getProductName()) ?>">
+                              <?= $escaper->escapeHtml($product->getName()) ?>
+                          </a>
+                        </strong>
+                        <p style="color:#EF0303; font-weight:600">
+                            <?php  $categoryIds =$_item->getProductCategoryIds();  // Get category IDs as an array
+                            // Convert to an array
+                            $categoryIdsArray = explode(',', $categoryIds); 
+                            $messageTags= (in_array(3,$categoryIdsArray) && !in_array($zoneNumber,$restrictedZones) && $zoneNumber>0)? __('EXPRESS'): __('OUT OF STOCK');
+                            ?>
+                            <?= $escaper->escapeHtml(__($messageTags)) ?>
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+            <?php endforeach; ?>
+            </table>
+            <div class="checkout_btn_side">
+                    <button class="btn" id="ah-removeofstock"><?= $escaper->escapeHtml(__('Remove items and continue')) ?></button>
+            </div>
+    </div>
+    <div class="sidefixed_hover" style="z-index:9"></div>
+</div>
+<?php endif; ?>
+<?= $block->getChildHtml('checkout.cart.order.actions') ?>
+<?= $block->getChildHtml('shopping.cart.table.after') ?>
+<?php
+$quote = $block->getQuote();
+/** Get Subtotal */
+$subtotal = $quote->getSubtotal();
+/** Get Currency Symbol */
+$currencySymbol =  $quote->getStore()->getCurrentCurrencyCode();?>
+<div class="cart-mobile-footer" id="cartMobileFooter">
+    <div class="optional_message" >
+        <span><?= $escaper->escapeHtml(__('Please Add Address To Checkout')) ?></span>
+    </div>
+    <div>
+        <span class="total_for_mobile"><?= $escaper->escapeHtml(__('Total')) ?></span>
+        <span class="currency"><?= $currencySymbol; ?></span>
+        <span class="price"><?php echo $block->escapeHtml(number_format($subtotal, 2)); ?></span>
+    </div>
+    <a class="checkout_outerDiv" href="<?= $block->getUrl('checkout') ?>" id="checkout_link">
+        <img src="<?php echo $block->getViewFileUrl('images/miniCartIcon.svg'); ?> " alt="cart" class="cart icon" />
+        <span class="mobile_footer_checkout"><?= $escaper->escapeHtml(__('Checkout')) ?></span>
+    </a>
+</div>
+
+
+<script data-defer-js-ignore="true" type="text/javascript">
+const zoneNumbers =localStorage.getItem('zoneNumber') || '';
+let hasGrocery=false;
+const restrictedZones = JSON.parse(localStorage.getItem('zonelist')) || []; // Fix typo & parse JSON
+function closetheoutstockblock() {
+   const sidepannel = document.getElementById('sidepannel');
+    if (sidepannel) {
+        sidepannel.classList.remove('active');
+    } else {
+        console.error("Element with ID 'sidepannel' not found.");
+    }
+}
+function zoneValidationCart(){ //Zone Validation
+    if(restrictedZones.includes(zoneNumbers) && zoneNumbers !== 'null') {
+        return true;
+        //zone have express delivery
+    }else {
+       // $('#cart_address_block').addClass('exp-border');
+        // Append message to specific div
+        //$('#cart_address_block').before('<div class="message error">'+  $t("Express delivery is not available for zone ("+zoneNumbers+"). Please remove express delivery items from the cart or change the address.") + '</div>');
+        return false;
+        // You can call other validation functions here if needed
+    }
+    
+    return true;
+}
+function checkGroceryCategory() {
+
+    if (window.checkoutConfig?.quoteItemData?.length > 0) {
+        for (const item of window.checkoutConfig.quoteItemData) {
+            const categoryIdsString = item.product_category_ids || ""; // Ensure it's a string
+            const categoryIds = categoryIdsString.split(',').map(id => id.trim()); // Convert to an array
+            // Check if category ID '3' exists and zone is restricted
+            if (categoryIds.includes("3") && !restrictedZones.includes(zoneNumbers)) {
+                hasGrocery = true;
+                break; // Stop checking once condition is met
+            }
+        }
+    }
+
+    return hasGrocery;
+}
+document.addEventListener("DOMContentLoaded", function () {
+     checkGroceryCategory();
+    setTimeout(() => {
+            document.querySelector('.cart_address_block').classList.remove('blink-border');
+        }, 5000);
+        // Check if longitude and latitude exist in localStorage
+        let longitude = localStorage.getItem("longitude");
+        let latitude = localStorage.getItem("latitude");
+        let zoneNumberValid = localStorage.getItem("zoneNumber");
+        let cartAddressBlock = document.getElementById("cart_address_block");
+        let cartMobileFooter = document.getElementById("cartMobileFooter");
+        let miniMapHeader = document.getElementById("mini_map_header");
+        const mybody = document.querySelector("body");
+        //Select all checkout buttons
+        let addressMessage = document.getElementById("user_map_address");
+        let cartSideContainer = document.getElementById("cart_side_container");
+        let checkoutLink = document.getElementById("checkout_link");
+        let checkoutButtons = document.querySelectorAll(".action.primary.checkout");
+        let changeNewAddress = document.getElementById("change-new-address");
+        if (longitude && latitude) {
+            let zoneValid= zoneValidationCart();
+            if(zoneValid){
+               //miniMapHeader.style.display = "block"; // Show mini map info
+                checkoutButtons.forEach(button => {
+                    button.style.display = "block"; // Show checkout button
+                    button.disabled = false; // Enable button
+                });
+            }
+            if (cartAddressBlock) {
+        
+                cartAddressBlock.style.display = "flex"; // Show mini map info
+        
+                if(addressMessage){
+                    addressMessage.textContent = localStorage.getItem('address');
+                }
+                if(changeNewAddress){
+                    changeNewAddress.textContent = "Change Address";
+                }
+        
+            }
+            if (cartSideContainer &&  zoneValid && cartMobileFooter) {
+                cartSideContainer.classList.remove("noaddress");
+                cartMobileFooter.classList.remove("noaddress");
+                mybody.classList.remove("stopScroll");
+            }
+            if (checkoutLink && cartMobileFooter && !zoneValid) {
+                //checkoutLink.href = "javascript:void(0)";
+                mybody.classList.add("stopScroll");
+            }
+            
+        } else {
+            
+             //miniMapHeader.style.display = "none"; // Hide mini map info
+            checkoutButtons.forEach(button => {
+                button.style.display = "none"; // Hide checkout button
+                button.disabled = true; // Disable button
+            });
+            if (cartAddressBlock) {
+                cartAddressBlock.style.display = "flex"; // Show mini map info
+        
+            }
+            
+             if (cartSideContainer && checkoutLink && cartMobileFooter) {
+                cartSideContainer.classList.add("noaddress");
+                checkoutLink.href = "javascript:void(0)";
+                cartMobileFooter.classList.add("noaddress");
+                mybody.classList.add("stopScroll");
+            }
+        }
+        
+});
+
+require(['jquery','mage/translate'], function ($,$t) {
+    'use strict';
+
+    function removeOutOfStockItems() {
+        let removePromises = [];
+        if (window.checkoutConfig?.quoteItemData?.length > 0) {
+            window.checkoutConfig.quoteItemData.forEach((item) => {
+                const categoryIdsString = item.product_category_ids || ""; // Ensure it's a string
+                const categoryIds = categoryIdsString.split(',').map(id => id.trim()); // Convert to an array
+               
+                // Check if the item has an error or is in a restricted category
+                if (item.has_error || (categoryIds.includes("3") && !restrictedZones.includes(zoneNumbers))) {
+                    const cartItemId = item.item_id;
+                    const formKey = document.querySelector('input[name="form_key"]').value;
+                    const productSku = item.sku;
+                    removePromises.push(
+                        removeItemFromCart({ item_id: cartItemId, form_key: formKey }, this, productSku)
+                    );
+                }
+            });
+    
+            // Execute all remove requests and reload after completion
+            if (removePromises.length > 0) {
+                Promise.all(removePromises).then(() => {
+                    console.log('Out-of-stock and restricted items removed successfully.');
+                    location.reload();
+                });
+            }
+        }
+    }
+    function removeItemFromCart( data, context, productSku) {
+         return $.ajax({
+            url: window.checkout.removeItemUrl,
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                console.log('Item removed: ' + productSku);
+            },
+            error: function (error) {
+                console.error('Error removing item ' + productSku, error);
+            }
+        });
+    }
+    $('#ah-removeofstock').on("click", function () {
+        console.log("remove items in bulk")
+        removeOutOfStockItems();
+    });
+        const itemElementCart = document.getElementById('ah_ask_confirmation');
+        const itemElementEmpty = document.getElementById('full_cart_del');
+        var outfStock=$('#ah-out-of-stock').text();
+        if(outfStock>0){
+            $('.ah-out-of-stock').css('display','table-row');
+            $('#total_out_of_stock').text(outfStock);
+        }
+        // Toggle visibility of full cart message
+        if (itemElementCart) {
+            itemElementCart.addEventListener('click', function () {
+                itemElementEmpty.style.display = (itemElementEmpty.style.display === "none") ? "block" : "none";
+            });
+        }
+        //Plus /minus submit form
+        $('.qty-plus,.qty-minus').on("click", function () {
+            let inputElem = $(this).parents('.qty-control').find('input');
+            let itemId = inputElem.attr('data-cart-item-id');
+            let currentQty = inputElem.val();
+            if ($(this).hasClass('qty-plus')) {
+                inputElem.val(parseInt(currentQty) + parseInt(1));
+            } else {
+                if (currentQty > 1) {
+                    inputElem.val(parseInt(currentQty) - parseInt(1));
+                }else{
+                    delCartItem(itemId);
+                    return;
+                }
+            }
+            $("#form-validate").submit();
+        });
+        //Onchange dropdown submit form
+        $(".custom-dropdown").each(function () {
+            var $dropdown = $(this);
+            var $selected = $dropdown.find(".dropdown-selected");
+            var $options = $dropdown.find(".dropdown-options");
+            var itemId = $dropdown.attr("id").split("-")[1];
+            var $hiddenInput = $("#cart-" + itemId + "-qty");
+            var $mobileInput = $("#cart-mobile-" + itemId + "-qty");
+
+            // Toggle dropdown visibility
+            $selected.on("click", function (e) {
+                e.stopPropagation();
+                $(".dropdown-options").not($options).hide();
+                $options.toggle();
+                $selected.toggleClass("open");
+            });
+
+            // Handle option selection
+            $options.find(".dropdown-option").on("click", function () {
+                var selectedValue = $(this).attr("data-value");
+
+                // Update dropdown UI
+                $selected.text(selectedValue);
+                $selected.attr("data-selected", selectedValue);
+                $selected.append('<span class="arrow-down">▼</span>');
+                $options.hide();
+                $selected.removeClass("open");
+
+                // Sync values across all input fields
+                $hiddenInput.val(selectedValue).trigger("change");
+                $mobileInput.val(selectedValue).trigger("change");
+
+                // Submit form if needed
+                if (selectedValue < 1) {
+                    delCartItem(itemId);
+                } else {
+                    $("#form-validate").submit();
+                }
+            });
+
+            // Sync mobile input changes with dropdown
+            $mobileInput.on("input", function () {
+                var newQty = $(this).val();
+                $selected.text(newQty);
+                $selected.append('<span class="arrow-down">▼</span>');
+                $hiddenInput.val(newQty);
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on("click", function () {
+                $options.hide();
+                $selected.removeClass("open");
+            });
+        });
+
+        // Restore original change event
+        $('.ah-qty').on("change", function () {
+            let currentQty = $(this).val();
+            let itemId = $(this).attr('data-cart-item-id');
+
+            if (currentQty < 1) {
+                delCartItem(itemId);
+                return;
+            }
+            $("#form-validate").submit();
+        });
+
+        function delCartItem(itemId) {
+            const divp = document.querySelector('.delete-' + itemId);
+            if (divp) {
+                // Check if divp has a parent or ancestor with the class '.action.action-delete'
+                const deleteButton = divp.querySelector(".action.action-delete");
+                if (deleteButton) {
+                    divp.classList.add('deletedItem');
+                    deleteButton.click();
+                }
+                setTimeout(function() {
+                    divp.style.display = "none";
+                    divp.style.visibility = 'hidden';
+                }, 300);
+            }
+        }
+
+        $('.delBtnCart').on('click', function() {
+            var itemId = $(this).attr('data-item-id');
+            delCartItem(itemId);
+        });
+        
+         $(document).ready(function () {
+           
+             // Call the function on cart load
+           
+            const cartItem = document.querySelectorAll('.fullCartItem');
+            const itemHead = document.querySelectorAll('.headOfTable');
+            function slideToLeft() {
+                var startX;
+                cartItem.forEach((item, index) => {
+                    item.addEventListener('touchstart', function(e) {
+                        var touch = e.touches[0];
+                        startX = touch.clientX;
+                    });
+                    item.addEventListener('touchmove', function(e) {
+                        var touch = e.touches[0];
+                        var change = startX - touch.clientX;
+                        if (change > 30) {
+                            item.classList.add('slide-left');
+                            itemHead[index].classList.add('itemSlided');
+                        } else if (change < -30) {
+                            item.classList.remove('slide-left');
+                            itemHead[index].classList.remove('itemSlided');
+                        }
+                    });
+                });
+            }
+             
+            
+            
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 641) {} else {
+                    slideToLeft();
+                }
+            });
+            slideToLeft();
+            
+         });
+      
+    }); 
+    
+</script>
