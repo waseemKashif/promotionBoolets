@@ -1,0 +1,507 @@
+<?php
+// Create the block instance and fetch categories
+$blockObj2=$this->getLayout()->getBlock('category.shared.block'); //$block->getLayout()->createBlock('\Ahmarket\Core\Block\ActiveCategories');
+$mainacategory = $blockObj2->getAHMainCategories(); //$blockObj2->getMainCategories();
+$mediaUrl = $blockObj2->getMediaUrl().'catalog/category/';
+
+// Define menu items
+$menuItems = [
+    ['title' => 'All Categories', 'url' => '#', 'icon' => 'icon-all-categories.svg'],
+    ['title' => 'Promotions', 'url' => $this->getBaseUrl() . 'promotions-offers.html', 'icon' => 'icon-promotions.svg'],
+    ['title' => 'New Arrivals', 'url' => $this->getBaseUrl() . 'new-arrivals.html', 'icon' => 'icon-new-arrivals.svg'],
+    ['title' => 'Celebrations & Occasions', 'url' => $this->getBaseUrl() . 'celebrations.html', 'icon' => 'icon-celebrations.svg']
+    // ['title' => 'Gift Cards', 'url' => $this->getBaseUrl() . 'gift-cards-qatar.html', 'icon' => 'giftCard.svg']
+];
+?>
+<style>
+/*order message styles here*/
+  /*.caution_block {*/
+  /*      display: flex;*/
+  /*      align-items: center;*/
+  /*      background-color: #fff;*/
+  /*      color: #333;*/
+  /*      padding: 5px 0px 0px;*/
+  /*      width: 100%;*/
+  /*      box-sizing: border-box;*/
+  /*      font-weight: 400;*/
+  /*      gap: 5px;*/
+  /*      justify-content: center;*/
+  /*    }*/
+
+/*order message css ends here*/
+ .lazyload {
+    filter: blur(10px);
+    transition: filter 0.3s ease-out;
+}
+
+.lazyload.loaded {
+    filter: blur(0);
+}
+    .navigation .secondary-nav-wrapper .nav-items {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        white-space: nowrap;
+    }
+
+    .navigation .secondary-nav-wrapper .nav-items .nav-item {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        min-width: fit-content;
+        padding: 0 !important;
+    }
+
+    .navigation .secondary-nav-wrapper .nav-items .nav-item .description,
+    .downloadApphead {
+        color: #000;
+        font-size: 14px;
+        /*text-transform: uppercase;*/
+        margin-bottom: -1px;
+        position: relative;
+        font-weight: 400;
+    }
+
+    .ah-download-app .description {
+        font-size: 12px;
+        vertical-align: middle;
+        font-weight: 400;
+        float: right;
+    }
+
+    .platforms {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .navigation .secondary-nav-wrapper {
+        background: #fff;
+        position: relative;
+    }
+
+    .nav-sections-item-content,
+    .nav-sections-item-content>.navigation,
+    .page-header,
+    .nav-sections-item-title,
+    .nav-sections {
+        background-color: #fff;
+    }
+
+    .ah-download-app {
+        gap: 5px;
+        align-items: center;
+        position: relative;
+        display: inline-flex;
+        vertical-align: top;
+        padding: 0 12px;
+        cursor: pointer;
+    }
+
+    .ah-download-app-store .description .platforms a {
+        padding-bottom: 5px !important;
+        padding-left: 0 !important;
+    }
+
+    .nav-items .ah-download-app:hover .downloadApphead::after {
+        width: 100%;
+    }
+
+    .ah-download-app-store {
+        box-shadow: 0 1px 4.5px 1px #0000001a;
+        display: none;
+        position: absolute;
+        z-index: 4;
+        top: 120%;
+        left: 0;
+        transform: translateX(-50%);
+        width: 380px;
+        padding: 8px;
+        border-radius: 13px;
+        background: #fff;
+        gap: 10px 10px;
+        grid-template-columns: 94px 1fr;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .downloadDisToggle {
+        display: flex !important;
+    }
+
+    .image {
+        float: left;
+    }
+
+    a,
+    a:visited,
+    .alink:visited {
+        text-decoration: none !important;
+        color: inherit;
+    }
+
+    .rtl .nav-items .nav-item:hover .description::after,
+    .rtl .footer-top .footer-column,
+    .nav-items .nav-item:hover .description::after {
+        width: 100%;
+    }
+
+    small.copyright {
+        border-top: 1px solid #494646;
+        background-color: #1c1c1c;
+        font-size: 12px;
+        padding: 8px;
+        float: none;
+        color: #fff;
+        text-align: center;
+    }
+
+    @media (max-width:830px) {
+        .navOpen {
+            display:block !important;
+        }
+        .ah-download-app-store {
+            width: 325px !important;
+            right: 50% !important;
+            left: 50% !important;
+            padding: 5px !important;
+            top: 105% !important;
+        }
+
+        .header.content {
+            position: initial !important;
+            width: 100% !important;
+            border-bottom: .5px solid #d1d1d1;
+            padding: 6px 8px;
+            box-sizing:border-box;
+            
+        }
+        body.cms-home .header.content {
+            border-top: .5px solid #d1d1d1;
+        }
+        .head_location_add {
+            margin-left: 8px;
+        }
+
+        .navigation .secondary-nav-wrapper .nav-items {
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .navigation .secondary-nav-wrapper .nav-items .nav-item {
+            min-width: fit-content;
+            gap: 4px !important;
+        }
+
+        .nav-sections-item-content {
+            box-sizing: border-box;
+            float: right;
+            margin-left: -100%;
+            margin-top: 71px;
+            width: 100%;
+            padding: 25px 0;
+        }
+
+        .allCatTopOne,
+        .nav-items::-webkit-scrollbar {
+            display: none !important;
+        }
+    }
+
+    @media (min-width:830px) {
+        .all-categories-overlay {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            z-index: 4;
+            inset: 1;
+            background-color: rgba(70, 70, 70, .49999);
+            left: 0;
+            right: 0;
+            top: 96px;
+      }
+        .DestopDownldappTab {
+            column-gap: 5px;
+        }
+
+        .top-navigation .container {
+            position: relative;
+        }
+
+        .navigation,
+        .breadcrumbs,
+        .header.content,
+        .page-wrapper>.widget,
+        .page-wrapper>.page-bottom,
+        .block.category.event,
+        .top-container,
+        .page-main {
+            max-width: 1600px !important;
+        }
+
+        .navigation.top-navigation {
+            background-color: #fff;
+        }
+
+        .navigation.top-navigation {
+            padding: 4px 20px;
+        }
+
+        .header.content {
+            padding: 0 !important;
+        }
+
+        .navigation .secondary-nav-wrapper .nav-items {
+            overflow-x: clip !important;
+        }
+
+        .nav-items .nav-item .description:after,
+        .nav-items .ah-download-app .downloadApphead:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: #b7d635;
+            transition: width .8s ease;
+        }
+    }
+</style>
+<nav class="navigation top-navigation" role="navigation" aria-label="Main Navigation">
+    <div class="container" role="none">
+        <div class="all-categories-overlay" style="display: none;"></div>
+        <div class="wrap_catgry" id="sideMobCata" style="display:none"> 
+            <div class="lft_catgry">
+                <?php foreach ($mainacategory as $index => $category): ?>
+                    <a href="<?php echo $category->getUrl(); ?>" title="<?= $category->getName(); ?>" class="btn_cat <?php echo ($category->getIsHide())? 'zoneHide':'' ?> <?= ($index === 1) ? 'cv_act' : ''; ?>"  id="<?= ($index === 1) ? 'mc1' : 'mc2'; ?>"><?= $category->getName(); ?></a>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="rgt_catgry">
+                <div class="cat_flexb">
+                    <div class="cat_inr_frm">
+                        <?php foreach ($mainacategory as $index => $category): ?>
+                            <?php 
+                                $subCategories = $blockObj2->getChildCategories($category); 
+                                $hasSubCategories = $subCategories && count($subCategories) > 0; 
+                            ?>
+                            <div class="sub_c <?php echo ($category->getIsHide())? 'zoneHide':'' ?>"  id="<?= ($index === 1) ? 'sc1' : 'sc2'; ?>" style="<?= ($index === 1) ? 'display: block' : 'display: none'; ?>">
+                                <div class="sub_c_inr <?= ($index === 1) ? 'mydiv' : 'sub_cat'; ?>" id="<?= ($index === 1) ? 'sub_cat' : 'sub_catmp'; ?>">
+                                    <?php if ($hasSubCategories):  ?>
+                                        <?php foreach ($subCategories as $subCategory): ?>
+                                            <?php if ($subCategory->getIsActive()):  ?>
+                                                <?php if($subCategory->getTopMenu()): ?>
+                                                    <div class="main_subCat ">
+                                                        <a title="<?= $subCategory->getName(); ?>" class="sub_item_title" href="<?= $subCategory->getUrl(); ?>">
+                                                            <span><?= $subCategory->getName(); ?></span>
+                                                        </a>
+                                                        <div class="sub_items">
+                                                            <?php $moreSub=$blockObj2->getChildCategories($subCategory); foreach ($moreSub as $subCategory1): ?>
+                                                                <?php if ($subCategory1->getIsActive()): ?>
+                                                                    <a title="<?= $subCategory1->getName(); ?>" class="car_bx" href="<?= $subCategory1->getUrl(); ?>">
+                                                                         <?php if ($subCategory1->getImage()) : ?>
+                                                                          <img class="lazyload" data-src="<?= $mediaUrl.$subCategory1->getImage(); ?>" alt="<?php echo $block->escapeHtml($subCategory1->getName()); ?> Shopping" />
+                                                                          <?php else : ?>
+                                                                              <img class="lazyload" data-src="<?php echo $block->getViewFileUrl('images/no_image.jpg'); ?>" />
+                                                                          <?php endif; ?>
+                                                                        <span><?= $subCategory1->getName(); ?></span>
+                                                                    </a>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    </div>                                                    
+                                                <?php else: ?>                                                    
+                                                    <a title="<?= $subCategory->getName(); ?>" class="car_bx" href="<?= $subCategory->getUrl(); ?>">
+                                                        <?php if ($subCategory->getImage()) : ?>
+                                                          <img class="lazyload" data-src="<?= $mediaUrl.$subCategory->getImage(); ?>" alt="<?php echo $block->escapeHtml($subCategory->getName()); ?> Shopping" />
+                                                          <?php else : ?>
+                                                              <img class="lazyload" data-src="<?php echo $block->getViewFileUrl('images/no_image.jpg'); ?>"  />
+                                                          <?php endif; ?>
+                                                        <span><?= $subCategory->getName(); ?></span>
+                                                    </a>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="secondary-nav-wrapper">
+            <div class="nav-items menu">
+                <?php foreach ($menuItems as $i => $item): ?>
+                    <a class="nav-item <?= ($i === 0) ? 'all-categories allCatTopOne' : ''; ?>" title="<?= __($item['title']); ?>" href="<?= $item['url']; ?>" >
+                        <img class="icon" src="<?= $this->getViewFileUrl('/images/' . $item['icon']); ?>" alt="<?= __($item['title']); ?> icon" />
+                        <div class="description"><?= __($item['title']); ?></div>
+                    </a>
+                <?php endforeach; ?>
+
+                <div class="ah-download-app">
+                    <div class="description text-center flex flex-nowrap DestopDownldappTab">
+                        <img class="icon" src="<?= $this->getViewFileUrl('/images/download-app.svg'); ?>" alt="<?= __('Ansar Gallery App Toggle'); ?> icon" />
+                        <p class="downloadApphead"><?= __('Download Ansar Gallery App'); ?></p>
+                    </div>
+                    <div class="ah-download-app-store">
+                        <div class="image">
+                            <img class="object-contain" src="<?= $this->getViewFileUrl('/images/download-app-qr-code-min.png'); ?>" height="94px" weight="94px" alt="<?= __('Ansar Gallery Shopping App'); ?> QR Code" />
+                        </div>
+                        <div class="description">
+                            <h5><?= __('Download Ansar Gallery App'); ?></h5>
+                            <p><?= __('Scan the QR code to download'); ?></p>
+                            <div class="platforms">
+                                <a href="https://apps.apple.com/qa/app/a-h-market/id1564070778" title="<?= __('Ansar Gallery at App Store')?>">
+                                    <img src="<?= $this->getViewFileUrl('/images/download-app-app-store-min.png'); ?>" alt="<?= __('Download Ansar Gallery at App Store')?>"  />
+                                </a>
+                                <a href="https://play.google.com/store/apps/details?id=com.ahmarkets.ecom" title="<?= __('Ansar Gallery at Google Play') ?>">
+                                    <img src="<?= $this->getViewFileUrl('/images/download-app-play-store-min.png'); ?>" alt="<?= __('Download Ansar Gallery at Google Play') ?>" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ah-download-app-store">
+                <div class="image">
+                    <img class="object-contain" src="<?= $this->getViewFileUrl('/images/download-app-qr-code-min.png'); ?>" height="94px" weight="94px" alt="qrcode">
+                </div>
+                <div class="description">
+                    <h5><?= __('Download Ansar Gallery App'); ?></h5>
+                    <p><?= __('Scan the QR code to download'); ?></p>
+                    <div class="platforms">
+                        <a href="https://apps.apple.com/qa/app/a-h-market/id1564070778" class="iosLink">
+                            <img  src="<?= $this->getViewFileUrl('/images/download-app-app-store-min.png'); ?>" alt="<?= __('App store'); ?>">
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=com.ahmarkets.ecom" class="androidLink">
+                            <img  src="<?= $this->getViewFileUrl('/images/download-app-play-store-min.png'); ?>" alt="<?= __('Play store'); ?>">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="caution_block">-->
+    <!--  <img-->
+    <!--    class="caution_icon"-->
+    <!--    src="/media/wysiwyg/pngcautionsm.png"-->
+    <!--    alt="caution"-->
+    <!--    width="22px"-->
+    <!--    height="24px"-->
+    <!--  />-->
+    <!--      <p>-->
+    <!--        Due to high order volume, deliveries may be delayed. We appreciate-->
+    <!--        your patience and understanding.-->
+    <!--      </p>-->
+    <!--</div>-->
+</nav>
+<script  data-defer-js-ignore="true"  type="text/javascript">
+document.addEventListener('DOMContentLoaded',function(){
+     const cataBtn = document.querySelector("#mob_02");
+     const mymainContent = document.querySelector(".page-main");
+    const wrap_catgry = document.querySelector("#sideMobCata");
+    const mybtn = document.querySelector(".allCatTopOne,.allCatTopOneMobile");
+     const header = document.querySelector(".page-header");
+     const mybody = document.querySelector("body");
+      const checkBread = document.querySelector(".breadcrumbs");
+      const naviLinks = document.querySelectorAll(".btn_cat");   
+      const allCategoriesOverlaySelector = document.querySelector(
+            ".all-categories-overlay"
+        );
+        const topBlockDiv = document.querySelector('.navigation.top-navigation')
+     var screenHeight = window.innerHeight;
+     function trigerMobileNavFix(){
+         if(window.matchMedia("(max-width: 830px)").matches) {
+             topBlockDiv.classList.toggle('navOpen');
+         }
+     }
+           naviLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                if (window.matchMedia("(max-width: 830px)").matches) {
+                    event.preventDefault(); 
+                    console.log('Navigation prevented on mobile');
+                }
+            });
+        });
+       function triggerCatagories() {
+             trigerMobileNavFix(); 
+        wrap_catgry.classList.toggle("activeSideCata");
+        cataBtn.classList.toggle("activeLink")
+        if(wrap_catgry.style.display=='none') {
+        wrap_catgry.style.display="flex"
+         mybody.style.height = screenHeight + "px";
+         header.classList.add("fixingHeader");
+         mybody.classList.add("stopScroll");
+        
+         allCategoriesOverlaySelector.style.display="flex";
+          if (checkBread !== null) {
+            checkBread.classList.add("breadMargin");
+        } else {
+            mymainContent.classList.add("mainPageMargin");
+         }
+        } else {
+              wrap_catgry.classList.remove("activeSideCata");
+               allCategoriesOverlaySelector.style.display="none";
+                 wrap_catgry.style.display="none"
+                  header.classList.remove("fixingHeader");
+                    mybody.classList.remove("stopScroll");
+                    mybody.style.height = "100%";
+                      if (checkBread !== null) {
+                        checkBread.classList.remove("breadMargin");
+                    } else {
+                        mymainContent.classList.remove("mainPageMargin");
+                    }
+        }
+               
+    };
+      mybtn.addEventListener('click',triggerCatagories);
+      cataBtn.addEventListener('click', triggerCatagories);
+  
+
+    
+    const insideCata = document.querySelector('.navigation .container ');
+    if (window.matchMedia("(min-width: 830px)").matches) {
+        document.addEventListener("click", function(event) {
+            const isClickInsideCat = wrap_catgry.contains(event.target);
+            const isClickInsideDownloadDivCat = insideCata.contains(event.target);
+
+            if (!isClickInsideCat && !isClickInsideDownloadDivCat) {
+                allCategoriesOverlaySelector.style.display="none"
+                wrap_catgry.classList.remove("activeSideCata");
+                 wrap_catgry.style.display="none"
+                  header.classList.remove("fixingHeader");
+                    mybody.classList.remove("stopScroll");
+                    mybody.style.height = "100%";
+                      if (checkBread !== null) {
+                        checkBread.classList.remove("breadMargin");
+                    } else {
+                        mymainContent.classList.remove("mainPageMargin");
+                    }
+            }
+        });
+    }
+    allCategoriesOverlaySelector.addEventListener('click',function(){
+        const isClickedInside=wrap_catgry.contains(event.target);
+        if(!isClickedInside){
+         allCategoriesOverlaySelector.style.display="none"
+                wrap_catgry.classList.remove("activeSideCata");
+                 wrap_catgry.style.display="none"
+                  header.classList.remove("fixingHeader");
+                    mybody.classList.remove("stopScroll");
+                    mybody.style.height = "100%";
+                      if (checkBread !== null) {
+                        checkBread.classList.remove("breadMargin");
+                    } else {
+                        mymainContent.classList.remove("mainPageMargin");
+                    }
+        }
+    })
+});
+</script>

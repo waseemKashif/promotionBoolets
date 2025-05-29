@@ -1,0 +1,491 @@
+<?php
+
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * @var \Magento\Theme\Block\Html\Header\Logo $block
+ */
+$storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt()
+?>
+<style>
+ 
+
+  .sub_items {
+    display: flex;
+    flex-wrap: wrap;
+    /*align-items: baseline;*/
+    gap: 0px;
+  }
+
+  .lft_catgry {
+    width: 22%;
+    height: 100%;
+    margin: auto;
+    float: left;
+    background-color: #f8f8f8;
+    border-right: 1px solid #f1f1f1;
+    font-size: 11px;
+    overflow-y: auto;
+  }
+
+  .rgt_catgry {
+    width: 79%;
+    height: 100%;
+    margin: auto;
+    float: left;
+    background-color: #fff;
+    font-weight: 300;
+    font-size: 12px;
+  }
+
+
+  .btn_cat {
+    width: 100%;
+    margin: auto;
+    float: left;
+    color: #000 !important;
+    background-color: transparent;
+  }
+ .header .block.block-search {
+              z-index:3 !important;
+          }
+@media (max-width:830) {
+        
+          
+     #mobileNavbar {
+     float: none;
+     clear: both;
+     display: block;
+     text-align: center;
+     width: 100%;
+ }
+  .rtl #mobileNavbar .footer_fix {
+      flex-direction: row-reverse;
+  }
+        .checkout-cart-index .page-wrapper #mobileNavbar {
+            display: none !important;
+        }
+}
+
+  @media (max-width: 830px) {
+      .main_subCat .sub_items {
+          row-gap: 8px;
+      }
+        .car_bx {
+        /*height: 145px;*/
+        height:auto;
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        text-overflow: ellipsis;
+    }
+
+    .car_bx img {
+        margin: 0 !important;
+        transform: scale(1.05);
+    }
+          .car_bx img {
+        width: 100%;
+        height: auto;
+        margin: auto;
+        float: left;
+        text-align: center;
+    }
+
+    .car_bx {
+        width: 31.33%;
+        margin: 0px !important;
+        float: left;
+        text-align: center;
+        border: none !important;
+        background-color: #fff;
+        /*overflow: hidden;*/
+        font-size: 11px;
+        font-weight: 600;
+        color: #000 !important;
+        padding: 2px !important;
+        text-transform: capitalize;
+        row-gap:6px
+    }
+      .sub_c_inr.sub_cat {
+          display: flex;
+         flex-wrap: wrap;
+         padding-bottom:55px;
+         row-gap:8px
+      }
+    .btn_cat {
+      height: 38px !important;
+      border-bottom: 1px solid #333;
+      border-right: 1px solid #f1f1f1;
+      font-size: 13px;
+      padding: 2px !important;
+      line-height: 16px;
+      border: none !important;
+     display: flex !important;
+        justify-content: center;
+        align-items: center;
+        text-align:center;
+        box-sizing:border-box;
+    }
+
+    .btn_cat.cv_act {
+      border-radius: 0 !important;
+      background-color: #000;
+      color: #fff !important;
+      border-right: 1px solid #fff;
+    }
+
+    .wrap_catgry {
+      left: -91px;
+      top: 0;
+      position: fixed !important;
+    }
+
+    .lft_catgry {
+      width: 29%;
+     height: -webkit-fill-available; 
+      height: -moz-available;        
+     height: fill-available;  
+      margin: auto;
+      float: left;
+      background-color: #f8f8f8;
+      border-right: 1px solid #f1f1f1;
+      font-size: 11px;
+      padding-bottom: 60px !important;
+      overflow-y: auto;
+    }
+
+    .rgt_catgry {
+      width: 70%;
+      height: 100%;
+      margin: auto;
+      float: left;
+      background-color: #fff;
+      font-weight: 300;
+      font-size: 12px;
+      padding-bottom: 60px;
+    }
+
+    .checkout-cart-index.no-items-in-cart .page-wrapper #mobileNavbar {
+      display: block !important;
+    }
+
+    #mobileNavbar .footer_fix {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      height: 55px;
+      bottom: 0;
+      right: 0;
+      background-color: #fff;
+      text-align: center;
+      position: fixed;
+      z-index: 999999;
+      box-shadow: 1px 1px 10px #ccc;
+      width: 100%;
+      gap: 4px
+    }
+
+    .box4_1 i {
+      color: #000;
+      font-size: 16px;
+    }
+
+    .box4_1 {
+      position: relative;
+      width: 100%;
+      margin: auto;
+      float: left;
+      background-color: transparent !important;
+      border: none !important;
+      height: 50px;
+      padding: 0 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #000 !important;
+    }
+
+    .activeLink svg,
+    .activeLink svg path {
+      fill: #b7d635;
+      transition: fill 0.3s ease;
+    }
+
+    .box4_1 .hm1 .activeLink {
+      color: #000;
+    }
+
+    .mob_cart_svgbox {
+      position: relative;
+    }
+
+
+    #mob_c04 .mob_cart_svgbox .counter-number {
+      position: absolute;
+      top: -4px;
+      right: -12px;
+      background-color: #e12b2b;
+      color: #fff;
+      border-radius: 41%;
+      height: 19px;
+      width: 19px;
+      font-size: 13px;
+      line-height: 21px;
+    }
+
+    .wrap_catgry.activeSideCata {
+      left: 0;
+      max-width: 500px;
+    }
+
+    .changeColor svg path {
+      fill: #b7d635;
+    }
+
+
+
+    .sub_c {
+      margin: 0 10px;
+      display: flex;
+      display: none;
+      flex-wrap: wrap;
+    }
+
+
+  }
+
+  @media (min-width:830px) {
+ #mobileNavbar {
+    display: none;
+  }
+  
+         .lft_catgry::-webkit-scrollbar {
+        background: #f1f1f1 !important;
+        height: 7px !important;
+        width:8px;
+    }
+
+         .lft_catgry::-webkit-scrollbar-thumb {
+            background: #cacaca !important;
+            border-radius: 10px;
+        }
+
+    .car_bx img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      aspect-ratio: 1 / 1;
+      background-color: #fff;
+      border: 1px solid #eceaea;
+    }
+
+    .car_bx {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /*justify-content: center;*/
+      text-align: center;
+      flex: 0 0 90px;
+      max-width: 90px;
+      row-gap: 8px;
+    }
+
+    .rgt_catgry .sub_cat {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding-left: 10px;
+    }
+
+    button:hover {
+      background: inherit;
+      color: #000;
+    }
+
+    .car_bx span {
+      font-size: 13px;
+      vertical-align: middle;
+      font-weight: 400;
+      float: right;
+      color: #000;
+      text-align: center;
+    }
+
+    .btn_cat {
+      font-weight: 500 !important;
+      line-height: 22px;
+      padding: 7px;
+      border: none;
+      text-align: left;
+      font-size: 14px !important;
+      box-sizing:border-box;
+      
+    }
+
+    .btn_cat:hover,
+    .btn_cat.cv_act {
+      border-left: 4px solid #b7d635 !important;
+      background-color: #fff;
+      border: none;
+    }
+
+    .wrap_catgry.activeSideCata {
+      left: 0px;
+      top: 29px;
+      max-width: 706px;
+      height: 630px;
+      bottom: auto !important;
+    }
+
+    .wrap_catgry {
+      left: auto;
+      top: -100%;
+
+    }
+  }
+
+  .wrap_catgry {
+    transition: all 0.2s ease-in-out;
+    margin: auto;
+    float: left;
+    position: fixed;
+    bottom: 0;
+    background-color: #fff;
+    z-index: 99;
+    display: none;
+    width: 0;
+  }
+
+  .wrap_catgry.activeSideCata {
+    display: flex ;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    border-right: 1px solid #cacaca;
+    position: absolute;
+    background: #fff;
+  }
+</style>
+<div class="widget block block-static-block" id="mobileNavbar">
+  <!--<div class="pull-right footer-payment-logo">-->
+  <!--    <div class="cdz-footer-bottom-payment"><img class="img-responsive" src="https://media-qatar.ahmarket.com/media/wysiwyg/new_images/Frame_6.webp" alt="Accept Payment"></div>-->
+  <!--</div>-->
+  <!--<a href="https://api.whatsapp.com/send/?phone=97460094446&amp;text=Hi, Can you assist me?&amp;app_absent=0" class="whatap blink" target="_blank" title="Need Help?"><i class="fa fa-whatsapp"></i></a>-->
+  <div class="footer_fix">
+    <a id="mob_c01" class="box4_1 hm1" href="<?= $block->escapeUrl($block->getUrl('')) ?>" title="<?= __('Home') ?>">
+      <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 13.0065L12 3.76701L0 13.0065V9.24168L12 0L24 9.23952V13.0065ZM21 12.6711V21.6H15V15.6481H9V21.6H3V12.6721L12 5.97679L21 12.6711Z" fill="#333333" />
+      </svg>
+      <span><?= __('Home') ?></span>
+    </a>
+
+    <a id="mob_02" href="#" class="box4_1 hm2 allCatTopOneMobile" title="<?= __('Categories') ?>">
+      <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.569336 6.11824C0.569336 4.54444 0.569336 3.75755 0.822732 3.1355C1.17111 2.28032 1.84966 1.60177 2.70483 1.2534C3.32688 1 4.11377 1 5.68758 1C7.26137 1 8.04827 1 8.67031 1.2534C9.5255 1.60177 10.2041 2.28032 10.5525 3.1355C10.8058 3.75755 10.8058 4.54444 10.8058 6.11824C10.8058 7.69204 10.8058 8.47894 10.5525 9.10098C10.2041 9.95616 9.5255 10.6347 8.67031 10.9831C8.04827 11.2364 7.26137 11.2364 5.68758 11.2364C4.11377 11.2364 3.32688 11.2364 2.70483 10.9831C1.84966 10.6347 1.17111 9.95616 0.822732 9.10098C0.569336 8.47894 0.569336 7.69204 0.569336 6.11824Z" fill="#333333" />
+        <path d="M0.569336 18.8126C0.569336 17.2388 0.569336 16.4519 0.822732 15.8298C1.17111 14.9747 1.84966 14.296 2.70483 13.9478C3.32688 13.6943 4.11377 13.6943 5.68758 13.6943C7.26137 13.6943 8.04827 13.6943 8.67031 13.9478C9.5255 14.296 10.2041 14.9747 10.5525 15.8298C10.8058 16.4519 10.8058 17.2388 10.8058 18.8126C10.8058 20.3863 10.8058 21.1732 10.5525 21.7953C10.2041 22.6505 9.5255 23.3291 8.67031 23.6774C8.04827 23.9308 7.26137 23.9308 5.68758 23.9308C4.11377 23.9308 3.32688 23.9308 2.70483 23.6774C1.84966 23.3291 1.17111 22.6505 0.822732 21.7953C0.569336 21.1732 0.569336 20.3863 0.569336 18.8126Z" fill="#333333" />
+        <path d="M13.1943 18.8126C13.1943 17.2388 13.1943 16.4519 13.4478 15.8298C13.7962 14.9747 14.4747 14.296 15.3298 13.9478C15.9519 13.6943 16.7388 13.6943 18.3126 13.6943C19.8865 13.6943 20.6733 13.6943 21.2953 13.9478C22.1505 14.296 22.8291 14.9747 23.1775 15.8298C23.4309 16.4519 23.4309 17.2388 23.4309 18.8126C23.4309 20.3863 23.4309 21.1732 23.1775 21.7953C22.8291 22.6505 22.1505 23.3291 21.2953 23.6774C20.6733 23.9308 19.8865 23.9308 18.3126 23.9308C16.7388 23.9308 15.9519 23.9308 15.3298 23.6774C14.4747 23.3291 13.7962 22.6505 13.4478 21.7953C13.1943 21.1732 13.1943 20.3863 13.1943 18.8126Z" fill="#333333" />
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M17.7503 10.4874C17.7503 11.0696 18.1793 11.5417 18.7087 11.5417C19.2379 11.5417 19.667 11.0696 19.667 10.4874V7.32497H22.542C23.0712 7.32497 23.5003 6.853 23.5003 6.27081C23.5003 5.68861 23.0712 5.21664 22.542 5.21664H19.667V2.05416C19.667 1.47197 19.2379 1 18.7087 1C18.1793 1 17.7503 1.47197 17.7503 2.05416V5.21664H14.8753C14.3459 5.21664 13.917 5.68861 13.917 6.27081C13.917 6.853 14.3459 7.32497 14.8753 7.32497H17.7503V10.4874Z" fill="#B7D635" stroke="#B7D635" />
+      </svg>
+      <span><?= __('Categories') ?></span>
+    </a>
+    <a id="mob_c03" class="box4_1 hm3" href="<?= $block->escapeUrl($block->getUrl('')) ?>/promotions-offers/best-price-offers.html" title="<?= __('Offers') ?>">
+      <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14.2499 12.8923C14.6246 12.8923 14.9284 12.5885 14.9284 12.2137C14.9284 11.839 14.6246 11.5352 14.2499 11.5352C13.8751 11.5352 13.5713 11.839 13.5713 12.2137C13.5713 12.5885 13.8751 12.8923 14.2499 12.8923Z" fill="#333333" />
+        <path d="M8.82213 7.46456C9.19689 7.46456 9.5007 7.16076 9.5007 6.78599C9.5007 6.41123 9.19689 6.10742 8.82213 6.10742C8.44736 6.10742 8.14355 6.41123 8.14355 6.78599C8.14355 7.16076 8.44736 7.46456 8.82213 7.46456Z" fill="#333333" />
+        <path d="M29.3137 6.84139C29.4671 6.81001 29.6049 6.72668 29.7039 6.60546C29.8029 6.48424 29.857 6.33256 29.8571 6.17605V0.678572C29.8572 0.589445 29.8397 0.501182 29.8056 0.41883C29.7715 0.336478 29.7215 0.261651 29.6585 0.198629C29.5955 0.135608 29.5207 0.085627 29.4383 0.0515445C29.356 0.0174621 29.2677 -5.34017e-05 29.1786 1.22299e-07H23.0714V2.03571C23.0714 2.21568 22.9999 2.38828 22.8727 2.51554C22.7454 2.64279 22.5728 2.71429 22.3929 2.71429C22.2129 2.71429 22.0403 2.64279 21.913 2.51554C21.7858 2.38828 21.7143 2.21568 21.7143 2.03571V1.22299e-07H0.678572C0.589445 -5.34017e-05 0.501182 0.0174621 0.41883 0.0515445C0.336478 0.085627 0.261651 0.135608 0.19863 0.198629C0.135608 0.261651 0.0856268 0.336478 0.0515443 0.41883C0.0174619 0.501182 -5.34017e-05 0.589445 1.223e-07 0.678572V6.17605C0.000119745 6.33256 0.0542526 6.48424 0.153256 6.60546C0.252259 6.72668 0.390066 6.81001 0.5434 6.84139C1.15622 6.96645 1.70702 7.29938 2.1026 7.78384C2.49818 8.2683 2.71426 8.87455 2.71426 9.5C2.71426 10.1255 2.49818 10.7317 2.1026 11.2162C1.70702 11.7006 1.15622 12.0335 0.5434 12.1586C0.390069 12.19 0.252266 12.2733 0.153264 12.3945C0.0542615 12.5158 0.000126115 12.6674 1.223e-07 12.8239V18.3214C-5.34017e-05 18.4106 0.0174619 18.4988 0.0515443 18.5812C0.0856268 18.6635 0.135608 18.7383 0.19863 18.8014C0.261651 18.8644 0.336478 18.9144 0.41883 18.9485C0.501182 18.9825 0.589445 19.0001 0.678572 19H21.7143V16.9643C21.7143 16.7843 21.7858 16.6117 21.913 16.4845C22.0403 16.3572 22.2129 16.2857 22.3929 16.2857C22.5728 16.2857 22.7454 16.3572 22.8727 16.4845C22.9999 16.6117 23.0714 16.7843 23.0714 16.9643V19H29.1786C29.2677 19.0001 29.356 18.9825 29.4383 18.9485C29.5207 18.9144 29.5955 18.8644 29.6585 18.8014C29.7215 18.7383 29.7715 18.6635 29.8056 18.5812C29.8397 18.4988 29.8572 18.4106 29.8571 18.3214V12.8239C29.857 12.6674 29.8029 12.5158 29.7039 12.3945C29.6049 12.2733 29.4671 12.19 29.3137 12.1586C28.7009 12.0335 28.1501 11.7006 27.7545 11.2162C27.359 10.7317 27.1429 10.1255 27.1429 9.5C27.1429 8.87455 27.359 8.2683 27.7545 7.78384C28.1501 7.29938 28.7009 6.96645 29.3137 6.84139ZM8.82143 4.75C9.22405 4.75 9.61764 4.86939 9.95241 5.09308C10.2872 5.31677 10.5481 5.6347 10.7022 6.00668C10.8563 6.37866 10.8966 6.78797 10.818 7.18286C10.7395 7.57775 10.5456 7.94048 10.2609 8.22518C9.9762 8.50988 9.61347 8.70376 9.21858 8.78231C8.82369 8.86086 8.41437 8.82055 8.04239 8.66647C7.67042 8.51239 7.35248 8.25147 7.12879 7.9167C6.90511 7.58192 6.78571 7.18834 6.78571 6.78571C6.78631 6.24599 7.00097 5.72854 7.38262 5.3469C7.76426 4.96526 8.2817 4.75059 8.82143 4.75ZM14.25 14.25C13.8474 14.25 13.4538 14.1306 13.119 13.9069C12.7842 13.6832 12.5233 13.3653 12.3692 12.9933C12.2152 12.6213 12.1749 12.212 12.2534 11.8171C12.3319 11.4222 12.5258 11.0595 12.8105 10.7748C13.0952 10.4901 13.458 10.2962 13.8529 10.2177C14.2477 10.1391 14.6571 10.1795 15.029 10.3335C15.401 10.4876 15.7189 10.7485 15.9426 11.0833C16.1663 11.4181 16.2857 11.8117 16.2857 12.2143C16.2851 12.754 16.0705 13.2715 15.6888 13.6531C15.3072 14.0347 14.7897 14.2494 14.25 14.25ZM16.0869 5.90836L7.94407 14.0512C7.81628 14.1758 7.64454 14.245 7.46607 14.2439C7.28759 14.2428 7.11675 14.1714 6.99054 14.0452C6.86434 13.919 6.79294 13.7481 6.79181 13.5696C6.79068 13.3912 6.85991 13.2194 6.9845 13.0916L15.1274 4.94879C15.2552 4.82419 15.4269 4.75496 15.6054 4.75609C15.7838 4.75723 15.9547 4.82863 16.0809 4.95483C16.2071 5.08103 16.2785 5.25188 16.2796 5.43035C16.2808 5.60883 16.2115 5.78056 16.0869 5.90836ZM23.0714 14.25C23.0714 14.43 22.9999 14.6026 22.8727 14.7298C22.7454 14.8571 22.5728 14.9286 22.3929 14.9286C22.2129 14.9286 22.0403 14.8571 21.913 14.7298C21.7858 14.6026 21.7143 14.43 21.7143 14.25V12.8929C21.7143 12.7129 21.7858 12.5403 21.913 12.413C22.0403 12.2858 22.2129 12.2143 22.3929 12.2143C22.5728 12.2143 22.7454 12.2858 22.8727 12.413C22.9999 12.5403 23.0714 12.7129 23.0714 12.8929V14.25ZM23.0714 10.1786C23.0714 10.3585 22.9999 10.5311 22.8727 10.6584C22.7454 10.7857 22.5728 10.8571 22.3929 10.8571C22.2129 10.8571 22.0403 10.7857 21.913 10.6584C21.7858 10.5311 21.7143 10.3585 21.7143 10.1786V8.82143C21.7143 8.64146 21.7858 8.46886 21.913 8.34161C22.0403 8.21435 22.2129 8.14286 22.3929 8.14286C22.5728 8.14286 22.7454 8.21435 22.8727 8.34161C22.9999 8.46886 23.0714 8.64146 23.0714 8.82143V10.1786ZM23.0714 6.10714C23.0714 6.28711 22.9999 6.45971 22.8727 6.58697C22.7454 6.71422 22.5728 6.78571 22.3929 6.78571C22.2129 6.78571 22.0403 6.71422 21.913 6.58697C21.7858 6.45971 21.7143 6.28711 21.7143 6.10714V4.75C21.7143 4.57003 21.7858 4.39743 21.913 4.27018C22.0403 4.14292 22.2129 4.07143 22.3929 4.07143C22.5728 4.07143 22.7454 4.14292 22.8727 4.27018C22.9999 4.39743 23.0714 4.57003 23.0714 4.75V6.10714Z" fill="#333333" />
+      </svg>
+      <span><?= __('Offers') ?></span>
+    </a>
+    <button id="mob_c05" class="box4_1 hm5 openLoginModalForMobileView" title="<?= __('My Account') ?>">
+      <svg width="32" height="27" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.9738 10.9129C13.0228 10.9129 14.0482 10.6018 14.9203 10.019C15.7925 9.43611 16.4722 8.60771 16.8735 7.63853C17.2748 6.66934 17.3796 5.60292 17.1748 4.57414C16.9699 3.54535 16.4646 2.60043 15.7226 1.85889C14.9807 1.11735 14.0355 0.612499 13.0066 0.408196C11.9777 0.203894 10.9114 0.309317 9.9424 0.711131C8.97343 1.11295 8.14539 1.7931 7.56302 2.66557C6.98064 3.53803 6.6701 4.56361 6.67066 5.61259C6.6729 7.01812 7.23243 8.36539 8.22655 9.35898C9.22068 10.3526 10.5683 10.9114 11.9738 10.9129Z" fill="#333333" />
+        <path d="M5.60715 23.3066H18.3346C18.9347 23.3066 19.5103 23.0682 19.9346 22.6439C20.3589 22.2196 20.5973 21.644 20.5973 21.0439V20.5264C20.5397 18.2767 19.6056 16.1386 17.9941 14.5679C16.3826 12.9971 14.2213 12.118 11.9709 12.118C9.72053 12.118 7.5592 12.9971 5.94771 14.5679C4.33623 16.1386 3.40209 18.2767 3.34448 20.5264V21.0439C3.34448 21.644 3.58287 22.2196 4.0072 22.6439C4.21731 22.854 4.46674 23.0207 4.74126 23.1344C5.01578 23.2481 5.31001 23.3066 5.60715 23.3066Z" fill="#333333" />
+      </svg>
+
+      <span><?= __('Account') ?></span>
+    </button>
+    <a id="mob_c04" class="box4_1 hm4" href="<?= $block->escapeUrl($block->getUrl('')) ?>/checkout/cart/" title="<?= __('Cart') ?>" data-bind="scope: 'minicart_content'">
+      <div class="mob_cart_svgbox">
+        <svg width="32" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19.642 14.7236C19.1119 14.7236 18.5938 14.8808 18.153 15.1753C17.7123 15.4698 17.3688 15.8884 17.1659 16.3781C16.9631 16.8678 16.91 17.4067 17.0134 17.9266C17.1168 18.4465 17.3721 18.924 17.7469 19.2988C18.1217 19.6736 18.5993 19.9289 19.1191 20.0323C19.639 20.1357 20.1779 20.0826 20.6676 19.8798C21.1573 19.6769 21.5759 19.3334 21.8704 18.8927C22.1649 18.452 22.3221 17.9338 22.3221 17.4037C22.3221 16.6929 22.0397 16.0112 21.5371 15.5086C21.0345 15.006 20.3528 14.7236 19.642 14.7236Z" fill="#333333" />
+          <path d="M8.35373 3.21808C8.20111 2.5641 7.8319 1.9809 7.30607 1.56318C6.78023 1.14546 6.12864 0.917742 5.45708 0.917001H4.04936C3.83301 0.916048 3.62413 0.996087 3.46381 1.14137C3.3035 1.28666 3.20335 1.48667 3.18307 1.70208C3.17944 1.81098 3.19776 1.91951 3.23694 2.02119C3.27613 2.12287 3.33537 2.21563 3.41115 2.29393C3.48693 2.37224 3.5777 2.43449 3.67804 2.47699C3.77838 2.51948 3.88625 2.54135 3.99521 2.54129H5.45708C5.76411 2.54472 6.06123 2.65039 6.30147 2.8416C6.54171 3.03282 6.71136 3.29865 6.78358 3.59708L7.16259 5.22138V5.35673C7.15837 5.53312 7.21581 5.70545 7.32502 5.84402L8.78688 12.0163C8.93222 12.6105 9.27258 13.1387 9.75353 13.5166C10.2345 13.8945 10.8282 14.1002 11.4399 14.1008H18.9929C19.7779 14.0947 20.5386 13.8282 21.1559 13.3432C21.7732 12.8581 22.2121 12.182 22.4039 11.4208L24.0823 4.54459H8.67859L8.35373 3.21808Z" fill="#333333" />
+          <path d="M11.2768 14.7236C10.7467 14.7236 10.2285 14.8808 9.78779 15.1753C9.34705 15.4698 9.00354 15.8884 8.80069 16.3781C8.59784 16.8678 8.54477 17.4067 8.64818 17.9266C8.75159 18.4465 9.00684 18.924 9.38166 19.2988C9.75648 19.6736 10.234 19.9289 10.7539 20.0323C11.2738 20.1357 11.8127 20.0826 12.3024 19.8798C12.7921 19.6769 13.2107 19.3334 13.5052 18.8927C13.7997 18.452 13.9568 17.9338 13.9568 17.4037C13.9568 16.6929 13.6745 16.0112 13.1719 15.5086C12.6693 15.006 11.9876 14.7236 11.2768 14.7236Z" fill="#333333" />
+          <path d="M3.02064 7.17068H5.26758C5.48297 7.17068 5.68954 7.08511 5.84185 6.9328C5.99416 6.7805 6.07972 6.57392 6.07972 6.35853C6.0835 6.25086 6.06508 6.14356 6.02561 6.04332C5.98613 5.94307 5.92645 5.85202 5.85026 5.77584C5.77408 5.69966 5.68303 5.63997 5.58279 5.6005C5.48254 5.56102 5.37525 5.5426 5.26758 5.54638H3.02064C2.91297 5.5426 2.80567 5.56102 2.70542 5.6005C2.60518 5.63997 2.51413 5.69966 2.43795 5.77584C2.36177 5.85202 2.30208 5.94307 2.26261 6.04332C2.22313 6.14356 2.20471 6.25086 2.20849 6.35853C2.20849 6.57392 2.29406 6.7805 2.44636 6.9328C2.59867 7.08511 2.80524 7.17068 3.02064 7.17068Z" fill="#333333" />
+          <path d="M6.89158 9.87806C6.89536 9.77039 6.87694 9.66309 6.83746 9.56285C6.79799 9.4626 6.7383 9.37155 6.66212 9.29537C6.58594 9.21919 6.49489 9.1595 6.39464 9.12003C6.2944 9.08055 6.1871 9.06213 6.07943 9.06591H0.854622C0.746951 9.06213 0.639654 9.08055 0.539409 9.12003C0.439164 9.1595 0.348117 9.21919 0.271935 9.29537C0.195753 9.37155 0.136067 9.4626 0.096591 9.56285C0.057115 9.66309 0.0386945 9.77039 0.0424759 9.87806C0.0424759 10.0935 0.128041 10.3 0.280348 10.4523C0.432655 10.6046 0.639228 10.6902 0.854622 10.6902H6.07943C6.29482 10.6902 6.5014 10.6046 6.6537 10.4523C6.80601 10.3 6.89158 10.0935 6.89158 9.87806Z" fill="#333333" />
+          <path d="M7.16217 12.5845H3.56165C3.45398 12.5807 3.34669 12.5991 3.24644 12.6386C3.1462 12.6781 3.05515 12.7377 2.97897 12.8139C2.90278 12.8901 2.8431 12.9812 2.80362 13.0814C2.76415 13.1816 2.74573 13.2889 2.74951 13.3966C2.74951 13.612 2.83507 13.8186 2.98738 13.9709C3.13969 14.1232 3.34626 14.2088 3.56165 14.2088H7.16217C7.37756 14.2088 7.58414 14.1232 7.73644 13.9709C7.88875 13.8186 7.97432 13.612 7.97432 13.3966C7.9781 13.2889 7.95968 13.1816 7.9202 13.0814C7.88072 12.9812 7.82104 12.8901 7.74486 12.8139C7.66867 12.7377 7.57763 12.6781 7.47738 12.6386C7.37714 12.5991 7.26984 12.5807 7.16217 12.5845Z" fill="#333333" />
+        </svg>
+        <span class="counter qty"  data-bind="css: { empty: !!getCartParam('summary_count') == false && !isLoading() }, blockLoader: isLoading">
+          <span class="counter-number" data-bind="visible: getCartParam('summary_count') > 0"><!-- ko text: getCartParam('summary_count') --><!-- /ko --></span>
+        </span>
+      </div>
+      <span><?= __('Cart') ?></span>
+    </a>
+  </div>
+</div>
+
+<script data-defer-js-ignore="true" type="text/javascript">
+  // Get the current URL
+  var currentUrl = window.location.href;
+
+  // Get all anchor elements in the footer
+  var footerLinks = document.querySelectorAll(".footer_fix a");
+
+  // Loop through each anchor element
+  footerLinks.forEach(function(link) {
+    // Check if the href attribute matches the current URL
+    if (link.href === currentUrl) {
+      // If the link is active, add the 'active' class
+      link.classList.add("activeLink");
+    } else {
+      // If the link is inactive, add the 'inactive' class
+      link.classList.add("inactiveLink");
+      link.classList.remove("activeLink");
+    }
+  });
+
+  //   below code is for mobile categories
+
+
+  const btns = document.querySelectorAll(".btn_cat");
+  const navDivs = document.querySelectorAll(".sub_c");
+
+  if (btns.length > 0 && navDivs.length > 0) {
+    btns[0].classList.add("cv_act");
+    navDivs[0].style.display = "block";
+  }
+
+  btns.forEach((links, index) => {
+    ['click', 'mouseover'].forEach(event => {
+      links.addEventListener(event, (e) => {
+        activeToggle(links, index, e);
+      });
+    });
+  });
+
+
+  function activeToggle(links, activeIt, e) {
+    btns.forEach((items) => {
+      items.classList.remove("cv_act");
+    });
+    e.target.classList.add("cv_act");
+
+    navDivs.forEach((divs, index) => {
+      divs.style.display = (index === activeIt) ? "block" : "none";
+    });
+  }
+
+
+  function back_cat() {
+    document.getElementById("sub_cat").style.display = "block";
+    document.getElementById("inr_cat").style.display = "none";
+    document.getElementById("sub_catmp").style.display = "block";
+    document.getElementById("inr_catmp").style.display = "none";
+  }
+</script>
