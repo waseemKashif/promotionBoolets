@@ -45,7 +45,7 @@
         mask-composite: exclude;
         mask-composite: inherit;
         animation: borderAnimation 10s linear infinite;
-        background: conic-gradient(white, blue,rgb(73, 73, 238));
+        background: conic-gradient(white, blue, rgb(73, 73, 238));
       }
 
       @keyframes borderAnimation {
@@ -58,9 +58,9 @@
       }
       @keyframes rainbowBackground {
         0% {
-         background: conic-gradient(white, blue,rgb(73, 73, 238));
+          background: conic-gradient(white, blue, rgb(73, 73, 238));
         }
-         /* 15% {
+        /* 15% {
           background: conic-gradient(rgb(73, 73, 238), blue,rgb(73, 73, 238));
         }
          35% {
@@ -76,7 +76,7 @@
           background: conic-gradient(rgb(73, 73, 238), blue,rgb(73, 73, 238));
         } */
         100% {
-          background: conic-gradient(blue, blue, blue,rgb(73, 73, 238));
+          background: conic-gradient(blue, blue, blue, rgb(73, 73, 238));
         }
       }
       .rainbow {
@@ -89,14 +89,67 @@
     </style>
   </head>
   <body>
-    <div class="main">
-      <div class="container">
-        <h1>Welcome to the Bootcamp</h1>
-        <p>This is a simple HTML document.</p>
-        <p>We are learning how to create a basic HTML structure.</p>
-        <p>Feel free to explore and modify the content!</p>
-      </div>
-      <div class="container2 rainbow"></div>
+    <div class="map_info address-details">
+      <p class="name"><strong>Name:</strong> <span>Waseem Kashif</span></p>
+      <p class="street"><strong>Street:</strong> <span>511</span></p>
+      <p class="telephone">
+        <strong>Phone:</strong>
+        <a
+          href="tel:30078398"
+          data-bind="attr: {'href': 'tel:' + address().telephone}, text: address().telephone"
+        >
+          30078398
+        </a>
+      </p>
     </div>
+
+    <style>
+      .shipping-address-item.selected-item {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        color: #333;
+        line-height: 1.6;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 0px;
+        column-gap: 15px;
+      }
+
+      .shipping-address-item.selected-item p {
+
+        justify-content: flex-start;
+        margin: 10px 0;
+        font-size: 15px;
+        border-bottom: 1px dashed #eee;
+        padding-bottom: 6px;
+      }
+
+      .shipping-address-item.selected-item p:last-child {
+        border-bottom: none;
+      }
+
+      .shipping-address-item.selected-item strong {
+        font-weight: 600;
+        color: #555;
+      }
+
+      .shipping-address-item.selected-item span,
+      .shipping-address-item.selected-item a {
+        font-weight: 500;
+        color: #111;
+      }
+
+      .shipping-address-item.selected-item a {
+        text-decoration: none;
+        color: #0077cc;
+        transition: color 0.2s;
+      }
+
+      .shipping-address-item.selected-item a:hover {
+        color: #005fa3;
+        text-decoration: underline;
+      }
+    </style>
   </body>
 </html>
