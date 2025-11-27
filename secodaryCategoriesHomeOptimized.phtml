@@ -1,0 +1,46 @@
+<?php if ($block->getData('category_id')) :
+    $categoryMediaUrl = "https://media-qatar.ansargallery.com/"; ?>
+  <section id="home_sec_1" class="hiding w-full">
+    <div class="bg-white homeSec_1 w-full">
+         <div class="box_main_con mind">
+            <?php $categories = $block->getIsFieldCategories('is_grid'); ?>
+            <?php foreach ($categories as $category) : ?>
+              <?php if ($category->getId()) : ?>
+                <a href="<?php echo $category->getUrl(); ?>" 
+                   title="<?php echo $block->escapeHtml($category->getName()); ?>" 
+                   class="mind box <?php echo ($category->getIsHide())? 'zoneHide':'' ?>">
+                    <div class="img_con">
+                      <?php 
+                      $imagecate = $category->getImage(); 
+                      if ($imagecate) : 
+                          $cleanImagePath = str_replace("/media/catalog/category", "", $imagecate);
+                          $imageUrl = '/media/catalog/category/' . ltrim($cleanImagePath, '/');
+                          $webpUrl = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $imageUrl);
+                      ?>
+                          <picture>
+                              <source srcset="<?= $webpUrl; ?>" type="image/webp">
+                              <img src="<?= $imageUrl; ?>" 
+                                   width="100" 
+                                   height="98" 
+                                   alt="<?php echo $block->escapeHtml($category->getName()); ?> Shopping" 
+                                   loading="lazy" />
+                          </picture>
+                      <?php else : ?>
+                          <picture>
+                              <source srcset="<?php echo $block->getViewFileUrl('images/no_image.webp'); ?>" type="image/webp">
+                              <img src="<?php echo $block->getViewFileUrl('images/no_image.jpg'); ?>" 
+                                   width="100" 
+                                   height="98" 
+                                   alt="No Image Available" 
+                                   loading="lazy" />
+                          </picture>
+                      <?php endif; ?>
+                    </div>
+                  <h2><?php echo $block->escapeHtml($category->getName()); ?></h2>
+                </a>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
+    </div>
+  </section>
+<?php endif; ?>

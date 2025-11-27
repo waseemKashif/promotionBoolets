@@ -1,0 +1,164 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// Get dependencies
+$blockObj = $block->getLayout()->createBlock('\Ahmarket\Core\Block\ActiveCategories');
+$mainCategories = $blockObj->getMainCategories();
+$mediaUrl = $blockObj->getMediaUrl() . 'catalog/category/';
+$storeName = $block->getThemeName() ?: $block->getLogoAlt();
+
+// Check if customer is logged in (better: inject via constructor in production)
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->get(\Magento\Customer\Model\Session::class);
+$isLoggedIn = $customerSession->isLoggedIn();
+?>
+
+<div class="widget block block-static-block mobile-navigation" id="mobileNavbar">
+    <!-- Navigation bar content -->
+    <div class="footer-navigation">
+        
+        <!-- Home Link -->
+        <a id="mob-home" class="nav-button nav-home" href="<?= $block->escapeUrl($block->getUrl('')) ?>"
+           title="<?= $block->escapeHtml(__('Home')) ?>" data-page="home">
+            <?= $block->getChildHtml('mobile_home_icon') ?>
+            <span><?= __('Home') ?></span>
+        </a>
+
+        <!-- Categories Button -->
+        <button id="mob-categories" class="nav-button nav-categories" 
+                data-toggle-menu="categories-sidebar"
+                title="<?= $block->escapeHtml(__('Categories')) ?>"
+                aria-label="<?= $block->escapeHtml(__('Toggle Categories Menu')) ?>"
+                aria-expanded="false">
+            <?= $block->getChildHtml('mobile_categories_icon') ?>
+            <span><?= __('Categories') ?></span>
+        </button>
+
+        <!-- Offers Link -->
+        <a id="mob-offers" class="nav-button nav-offers" 
+           href="<?= $block->escapeUrl($block->getUrl('')) ?>/promotions-offers/best-price-offers.html"
+           title="<?= $block->escapeHtml(__('Offers')) ?>" data-page="offers">
+            <?= $block->getChildHtml('mobile_offers_icon') ?>
+            <span><?= __('Offers') ?></span>
+        </a>
+
+        <!-- Account Link/Button -->
+        <?php if ($isLoggedIn): ?>
+            <a id="mob-account" class="nav-button nav-account" 
+               href="<?= $block->escapeUrl($block->getUrl('curated/customer/account')) ?>"
+               title="<?= $block->escapeHtml(__('My Account')) ?>" data-page="account">
+                <?= $block->getChildHtml('mobile_account_icon') ?>
+                <span><?= __('Account') ?></span>
+            </a>
+        <?php else: ?>
+            <button id="mob-account" class="nav-button nav-account open-login-modal" 
+                    title="<?= $block->escapeHtml(__('My Account')) ?>"
+                    aria-label="<?= $block->escapeHtml(__('Login to Your Account')) ?>">
+                <?= $block->getChildHtml('mobile_account_icon') ?>
+                <span><?= __('Account') ?></span>
+            </button>
+        <?php endif; ?>
+
+        <!-- Cart Link -->
+        <a id="mob-cart" class="nav-button nav-cart" 
+           href="<?= $block->escapeUrl($block->getUrl('checkout/cart/')) ?>"
+           title="<?= $block->escapeHtml(__('Shopping Cart')) ?>" 
+           data-page="cart"
+           data-bind="scope: 'minicart_content'">
+            <div class="cart-icon-wrapper">
+                <?= $block->getChildHtml('mobile_cart_icon') ?>
+                <span class="cart-counter" data-bind="css: { empty: !getCartParam('summary_count') }, blockLoader: isLoading()"
+                      aria-live="polite" aria-label="<?= __('Items in cart') ?>">
+                    <span class="counter-badge" data-bind="visible: getCartParam('summary_count') > 0, text: getCartParam('summary_count')"></span>
+                </span>
+            </div>
+            <span><?= __('Cart') ?></span>
+        </a>
+    </div>
+
+    <!-- Mobile Categories Sidebar -->
+    <aside class="categories-sidebar" id="categories-sidebar" role="navigation" aria-label="<?= __('Product Categories') ?>">
+        <div class="categories-left-panel" data-categories-list>
+            <?php foreach ($mainCategories as $index => $category): ?>
+                <a href="<?= $block->escapeUrl($category->getUrl()) ?>" 
+                   title="<?= $block->escapeHtml($category->getName()) ?>"
+                   class="category-button<?= $category->getIsHide() ? ' category-hidden' : '' ?>"
+                   data-category-id="<?= (int)$category->getId() ?>"
+                   <?= ($index === 0) ? 'data-active="true"' : '' ?>>
+                    <?= $block->escapeHtml($category->getName()) ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="categories-right-panel">
+            <div class="categories-content-wrapper">
+                <div class="categories-content">
+                    <?php foreach ($mainCategories as $index => $category): ?>
+                        <?php $subCategories = $blockObj->getChildCategories($category); ?>
+                        <div class="category-content" 
+                             data-category-id="<?= (int)$category->getId() ?>"
+                             <?= ($index === 0) ? 'style="display: block;"' : 'style="display: none;"' ?>>
+                            
+                            <?php if ($subCategories && count($subCategories) > 0): ?>
+                                <?php foreach ($subCategories as $subCategory): ?>
+                                    <?php if ($subCategory->getIsActive()): ?>
+                                        
+                                        <?php if ($subCategory->getMobileTopMenu()): ?>
+                                            <div class="subcategory-group">
+                                                <a href="<?= $block->escapeUrl($subCategory->getUrl()) ?>" 
+                                                   class="subcategory-title"
+                                                   title="<?= $block->escapeHtml($subCategory->getName()) ?>">
+                                                    <?= $block->escapeHtml($subCategory->getName()) ?>
+                                                </a>
+                                                <div class="subcategory-items">
+                                                    <?php 
+                                                    $childCategories = $blockObj->getChildCategories($subCategory);
+                                                    foreach ($childCategories as $childCategory): 
+                                                    ?>
+                                                        <?php if ($childCategory->getIsActive()): ?>
+                                                            <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                                                ->setTemplate('Ahmarket_Core::category-item.phtml')
+                                                                ->setCategory($childCategory)
+                                                                ->setMediaUrl($mediaUrl)
+                                                                ->toHtml(); ?>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
+                                        <?php else: ?>
+                                            <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                                ->setTemplate('Ahmarket_Core::category-item.phtml')
+                                                ->setCategory($subCategory)
+                                                ->setMediaUrl($mediaUrl)
+                                                ->toHtml(); ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+
+                            <?php if ((int)$category->getId() === 3): ?>
+                                <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                    ->setTemplate('Ahmarket_Core::category-item.phtml')
+                                    ->setCategoryName('Personal Care')
+                                    ->setCategoryUrl($block->getBaseUrl() . 'beauty-care/personal-care.html')
+                                    ->setCategoryImage('https://media-qatar.ansargallery.com/catalog/category/personal_care_2.png')
+                                    ->toHtml(); ?>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<style>
+    /* CSS consolidated - see separate section below */
+</style>
+
+<script type="module" data-defer-js-ignore="true">
+    // Mobile Navigation Module - see separate JS file section below
+</script>

@@ -1,0 +1,426 @@
+<?php
+$imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Catalog\Helper\Image::class);
+$catBlock = $block->getLayout()->createBlock('Ahmarket\Core\Block\ActiveCategories');
+$mediaUrl = $catBlock->getMediaUrl() . 'catalog/category/';
+?>
+<section id="home_sec_2">
+    <div class="w-full">
+        <div class="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto w-full md:gap-4 gap-y-6 homesec2Grid">
+            <?php
+            $categoryId = $block->getColumnOne();
+            $categoryId2 = $block->getColumnTwo();
+            $categoryId3 = $block->getColumnThree();
+            $greatDeals = $block->getGreatDealsByCategory(4); ?>
+
+            <div class="col col_1 bg-white md:rounded-[12px] md:p-6 p-3 md:h-[50rem] mainContainerSec_4 homesec2firstblock">
+                <div class="box">
+                    <div class="title_con">
+                        <h3><?= $block->escapeHtml(__('Explore the World of Scent')) ?></h3>
+                    </div>
+                    <div class="grid grid-cols-2 w-full justify-center items-start gap-2 greatDealsSec">
+                        <?php $categories = $catBlock->getChildCategories(null, 207); ?>
+                        <?php if ($categories): foreach ($categories as $category) : ?>
+                                <?php if ($category->getId()) : ?>
+                                    <a href="<?php echo $category->getUrl(); ?>" class="listing centerClass" title="<?= $category->getName() ?>">
+                                        <div class="img_con">
+                                            <?php
+                                            $imagecate = $category->getImage();
+
+                                            if ($imagecate) {
+                                                if (strpos($imagecate, '/media/catalog/') === 0) {
+                                                    $imageUrl = $imagecate;
+                                                } elseif (strpos($imagecate, 'http') === 0) {
+                                                    $imageUrl = $imagecate;
+                                                } else {
+                                                    $imageUrl = $mediaUrl . ltrim($imagecate, '/');
+                                                }
+                                            ?>
+                                                <picture>
+                                                    <source srcset="<?= $imageUrl; ?>?format=webp" type="image/webp">
+                                                    <img class="lazyload"
+                                                        data-src="<?= $imageUrl; ?>"
+                                                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                        alt="<?= $block->escapeHtml($category->getName()); ?> Shopping"
+                                                        loading="lazy"
+                                                        width="200"
+                                                        height="200" />
+                                                </picture>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <img class="lazyload"
+                                                    data-src="<?= $block->getViewFileUrl('images/no_image.jpg'); ?>"
+                                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                    alt="No Image Available"
+                                                    loading="lazy"
+                                                    width="200"
+                                                    height="200" />
+                                            <?php
+                                            }
+                                            ?>
+                                        </div>
+                                        <h4 class="titlesAndHeadings celebrationHeading">
+                                            <?= $category->getName() ?>
+                                        </h4>
+                                    </a>
+                                <?php endif; ?>
+                        <?php endforeach;
+                        endif; ?>
+                    </div>
+                    <div class="md:w-full flex justify-end ViewAllBtn greatDealBtn">
+                        <a href="<?= $block->getBaseUrl(); ?>beauty-care/perfumes-fragrances.html" class="" title="<?= $block->escapeHtml(__('View All')) ?>"> <?= $block->escapeHtml(__('View All')) ?> </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col_1 bg-white md:rounded-[12px] md:p-6 p-3 md:block hidden md:h-[50rem] mainContainerSec_4">
+                <div class="box">
+                    <div class="title_con">
+                        <h3><?= $block->escapeHtml(__('Fresh Picks, Every Day')) ?></h3>
+                    </div>
+                    <div class="grid grid-cols-2 w-full justify-center items-start md:gap-2">
+                        <?php $categories = $catBlock->getChildCategories(null, 3); ?>
+                        <?php if ($categories): foreach ($categories as $category) : ?>
+                                <?php if ($category->getId()) : ?>
+                                    <a href="<?php echo $category->getUrl(); ?>" class="listing centerClass" title="<?= $category->getName() ?>">
+                                        <div class="img_con">
+                                            <?php
+                                            $imagecate = $category->getImage();
+
+                                            if ($imagecate) {
+                                                if (strpos($imagecate, '/media/catalog/') === 0) {
+                                                    $imageUrl = $imagecate;
+                                                } elseif (strpos($imagecate, 'http') === 0) {
+                                                    $imageUrl = $imagecate;
+                                                } else {
+                                                    $imageUrl = $mediaUrl . ltrim($imagecate, '/');
+                                                }
+                                            ?>
+                                                <picture>
+                                                    <source srcset="<?= $imageUrl; ?>?format=webp" type="image/webp">
+                                                    <img class="lazyload"
+                                                        data-src="<?= $imageUrl; ?>"
+                                                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                        alt="<?= $block->escapeHtml($category->getName()); ?> Shopping"
+                                                        loading="lazy"
+                                                        width="200"
+                                                        height="200" />
+                                                </picture>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <img class="lazyload"
+                                                    data-src="<?= $block->getViewFileUrl('images/no_image.jpg'); ?>"
+                                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                    alt="No Image Available"
+                                                    loading="lazy"
+                                                    width="200"
+                                                    height="200" />
+                                            <?php
+                                            }
+                                            ?>
+                                        </div>
+                                        <h4 class="titlesAndHeadings celebrationHeading">
+                                            <?= $category->getName() ?>
+                                        </h4>
+                                    </a>
+                                <?php endif; ?>
+                        <?php endforeach;
+                        endif; ?>
+                    </div>
+                    <div class="w-full flex justify-end ViewAllBtn">
+                        <a href="grocery.html" class="" title="<?= $block->escapeHtml(__('View All')) ?>">
+                            <?= $block->escapeHtml(__('View All')) ?> </a>
+                    </div>
+                </div>
+            </div>
+
+            <?php
+            $greatDealsEelc = $block->getGreatDealsByCategory($categoryId3);
+            if ($greatDealsEelc && $greatDealsEelc->getSize()): ?>
+                <div class="col col_1 bg-white md:rounded-[12px] md:p-6 p-3  md:h-[50rem] mainContainerSec_4">
+                    <div class="box">
+                        <div class="title_con">
+                            <h3>
+                                <?= $block->escapeHtml(__('Up to 48% off on Electronics')) ?>
+                            </h3>
+                        </div>
+                        <div class="grid grid-cols-2 w-full justify-center items-start md:gap-2 greatDealsSec">
+                            <?php foreach ($greatDealsEelc as $gdproduct): ?>
+                                <a href="<?= $block->escapeUrl($gdproduct->getProductUrl()) ?>" class="listing relative" title="<?= $gdproduct->getName() ?>">
+                                    <div class="img_con">
+                                        <picture>
+                                            <?php
+                                            if ($gdproduct->getImage()) {
+                                                $productImageUrl = $imageHelper->init($gdproduct, 'category_page_grid')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->getUrl();
+                                            ?>
+                                                <source srcset="<?= $productImageUrl; ?>?format=webp" type="image/webp">
+                                                <img class="lazyload"
+                                                    data-src="<?= $productImageUrl; ?>"
+                                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 300'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                    alt="<?= $block->escapeHtml($gdproduct->getName()); ?>"
+                                                    loading="lazy"
+                                                    width="240"
+                                                    height="300" />
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <img class="lazyload"
+                                                    data-src="<?= $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/image.jpg'); ?>"
+                                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 300'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                    alt="<?= $block->escapeHtml($gdproduct->getName()); ?>"
+                                                    loading="lazy"
+                                                    width="240"
+                                                    height="300" />
+                                            <?php
+                                            } ?>
+                                        </picture>
+                                        <?php
+                                        $originalPrice = $gdproduct->getPrice();
+                                        $specialPrice = $gdproduct->getSpecialPrice();
+
+                                        if ($specialPrice && $originalPrice > $specialPrice) {
+                                            $discountPercentage = round((($originalPrice - $specialPrice) / $originalPrice) * 100);
+                                        } else {
+                                            $discountPercentage = 0;
+                                        }
+
+                                        if ($discountPercentage > 0) { ?>
+                                            <span class="homeSec4Offer">-<?= $discountPercentage ?>%</span>
+                                        <?php }  ?>
+                                    </div>
+                                    <h4 class="titlesAndHeadings" title="<?= $gdproduct->getName() ?>"><?= $gdproduct->getName() ?></h4>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="md:w-full flex justify-end ViewAllBtn greatDealBtn">
+                            <a href="<?= $block->getBaseUrl(); ?>electronics.html?product_list_order=sale&amp;product_list_dir=desc" class="" title="<?= $block->escapeHtml(__('View All')) ?>">
+                                <?= $block->escapeHtml(__('View All')) ?> </a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="col col_2 bg-white md:rounded-[12px] md:p-6 p-3 md:h-[50rem] mainContainerSec_4">
+                <div class="box">
+                    <div class="img_1_con hidden md:block">
+                        <a href="delivery-policy" title="Delivery Policy">
+                            <picture>
+                                <source srcset="<?= $this->getViewFileUrl('images/freeDev.webp'); ?>" type="image/webp">
+                                <img class="lazyload"
+                                    data-src="<?= $this->getViewFileUrl('images/freeDev.png'); ?>"
+                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 150'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                    alt="Free Delivery Promotion"
+                                    loading="lazy"
+                                    width="300"
+                                    height="150">
+                            </picture>
+                        </a>
+                    </div>
+                    <a href="<?= $block->getBaseUrl(); ?>promotions" class="promotionLinkCard" title="Promotions and Offers">
+                        <div class="content">
+                            <h3><?= $block->escapeHtml(__('View our latest Promotion Booklets')) ?></h3>
+                            <span><?= $block->escapeHtml(__('Click and order your favorite products.')) ?></span>
+                        </div>
+                        <div class="img_2_con md:flex justify-center">
+                            <picture>
+                                <source srcset="<?= $this->getViewFileUrl('images/promotion_badge.webp'); ?>" type="image/webp">
+                                <img class="lazyload pulse"
+                                    id="pulse"
+                                    data-src="<?= $this->getViewFileUrl('images/promotion_badge.png'); ?>"
+                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                    alt="Promotions &amp; Offers"
+                                    loading="lazy"
+                                    width="200"
+                                    height="200">
+                            </picture>
+                        </div>
+                    </a>
+                    <div class="w-full md:flex justify-end hidden ViewAllBtn">
+                        <a href="<?= $block->getBaseUrl(); ?>promotions" class="" title="<?= $block->escapeHtml(__('View Booklets')) ?>"> <?= $block->escapeHtml(__('View Booklets')) ?> </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col_3 bg-white md:rounded-[12px] md:p-6 p-3 md:block hidden mainContainerSec_4 ">
+                <div class="box">
+                    <div class="title_con">
+                        <h3><?= $block->escapeHtml(__('Joy in Every Toy')) ?></h3>
+                    </div>
+                    <div class="grid grid-cols-2 w-full justify-center items-start md:gap-2">
+                        <?php $categories = $catBlock->getChildCategories(null, 249); ?>
+                        <?php if ($categories): foreach ($categories as $category) : ?>
+                                <?php if ($category->getId()) : ?>
+                                    <a href="<?php echo $category->getUrl(); ?>" class="listing centerClass" title="<?= $category->getName() ?>">
+                                        <div class="img_con">
+                                            <?php
+                                            $imagecate = $category->getImage();
+
+                                            if ($imagecate) {
+                                                if (strpos($imagecate, '/media/catalog/') === 0) {
+                                                    $imageUrl = $imagecate;
+                                                } elseif (strpos($imagecate, 'http') === 0) {
+                                                    $imageUrl = $imagecate;
+                                                } else {
+                                                    $imageUrl = $mediaUrl  . ltrim($imagecate, '/');
+                                                }
+                                            ?>
+                                                <picture>
+                                                    <source srcset="<?= $imageUrl; ?>?format=webp" type="image/webp">
+                                                    <img class="lazyload"
+                                                        data-src="<?= $imageUrl; ?>"
+                                                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                        alt="<?= $block->escapeHtml($category->getName()); ?> Shopping"
+                                                        loading="lazy"
+                                                        width="200"
+                                                        height="200" />
+                                                </picture>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <img class="lazyload"
+                                                    data-src="<?= $block->getViewFileUrl('images/no_image.jpg'); ?>"
+                                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                    alt="No Image Available"
+                                                    loading="lazy"
+                                                    width="200"
+                                                    height="200" />
+                                            <?php
+                                            }
+                                            ?>
+                                        </div>
+                                        <h4 class="titlesAndHeadings celebrationHeading">
+                                            <?= $category->getName() ?>
+                                        </h4>
+                                    </a>
+                                <?php endif; ?>
+                        <?php endforeach;
+                        endif; ?>
+                    </div>
+                    <div class="w-full flex justify-end ViewAllBtn">
+                        <a href="<?= $block->getBaseUrl(); ?>toys.html" class="" title="<?= $block->escapeHtml(__('View All')) ?>"> <?= $block->escapeHtml(__('View All')) ?> </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col_4 bg-white md:rounded-[12px] md:p-6 p-3 md:block hidden md:h-[50rem] mainContainerSec_4">
+                <div class="box">
+                    <div class="content">
+                        <h3><?= __('Travel Bags & Luggage'); ?></h3>
+                        <span><?= __('Travel Essentials for Every Adventure'); ?></span>
+                    </div>
+                    <a href="<?= $block->getBaseUrl(); ?>fashion/travel-bags-luggage.html" class="img_con" title="<?= __('Travel Bags & Luggage'); ?>">
+                        <picture>
+                            <source srcset="https://media-qatar.ansargallery.com/wysiwyg/luggage-banner.webp" type="image/webp">
+                            <img class="lazyload"
+                                data-src="https://media-qatar.ansargallery.com/wysiwyg/luggage-banner.jpg"
+                                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                alt="Travel Bags &amp; Luggage Shopping"
+                                loading="lazy"
+                                width="400"
+                                height="300">
+                        </picture>
+                    </a>
+                    <div class="flex justify-center w-full secondShopNowbtn">
+                        <a href="<?= $block->getBaseUrl(); ?>fashion/travel-bags-luggage.html" class="shopingLink" title="<?= __('Travel Bags & Luggage'); ?>">
+                            <span class="shopNowLabel">
+                                <?= __('SHOP NOW'); ?>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col_4 bg-white rounded-[12px] md:p-6 p-3 md:block hidden mainContainerSec_4">
+                <div class="box">
+                    <div class="content">
+                        <h3><?= __('Office & School Supplies'); ?></h3>
+                        <span><?= __('All Your Study & Work Essentials in One Place.'); ?></span>
+                    </div>
+                    <a href="<?= $block->getBaseUrl(); ?>stationery/office-school-supplies.html" class="img_con" title="<?= __('Stationery'); ?>">
+                        <picture>
+                            <source srcset="https://media-qatar.ansargallery.com/wysiwyg/stationery-img.webp" type="image/webp">
+                            <img class="lazyload"
+                                data-src="https://media-qatar.ansargallery.com/wysiwyg/stationery-img.jpg"
+                                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                alt="Stationery Shopping"
+                                loading="lazy"
+                                width="400"
+                                height="300">
+                        </picture>
+                    </a>
+                    <div class="flex justify-center w-full secondShopNowbtn">
+                        <a href="<?= $block->getBaseUrl(); ?>stationery/office-school-supplies.html" class="shopingLink" title="<?= __('Stationery'); ?>">
+                            <span class="shopNowLabel">
+                                <?= __('SHOP NOW'); ?>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <?php
+            $topDeals = $block->getGreatDealsByCategory(6);
+            if ($topDeals && $topDeals->getSize()): ?>
+                <div class="col col_3 bg-white md:rounded-[12px] md:p-6 p-3  md:h-[50rem] mainContainerSec_4 testIphone">
+                    <div class="box">
+                        <div class="title_con">
+                            <h3 class=""><?= $block->escapeHtml(__('Top Picks For You')) ?></h3>
+                        </div>
+                        <div class="grid grid-cols-2 w-full md:justify-center items-start md:gap-2  ">
+                            <?php foreach ($topDeals as $topDeal) : ?>
+                                <a href="<?= $block->escapeUrl($topDeal->getProductUrl()) ?>" class="listing relative mx-auto iphoneFixLink" title="<?= $topDeal->getName() ?>">
+                                    <div class="img_con">
+                                        <?php
+                                        if ($topDeal->getImage()) {
+                                            $productImageUrl = $imageHelper->init($topDeal, 'category_page_grid')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->getUrl();
+                                        ?>
+                                            <picture>
+                                                <source srcset="<?= $productImageUrl; ?>?format=webp" type="image/webp">
+                                                <img class="lazyload"
+                                                    data-src="<?= $productImageUrl; ?>"
+                                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 300'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                    alt="<?= $block->escapeHtml($topDeal->getName()); ?> Shopping"
+                                                    loading="lazy"
+                                                    width="240"
+                                                    height="300" />
+                                            </picture>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <img class="lazyload"
+                                                data-src="<?= $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/image.jpg'); ?>"
+                                                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 300'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                                alt="<?= $block->escapeHtml($topDeal->getName()); ?> Shopping"
+                                                loading="lazy"
+                                                width="240"
+                                                height="300" />
+                                        <?php
+                                        } ?>
+                                        <?php
+                                        $originalPrice = $topDeal->getPrice();
+                                        $specialPrice = $topDeal->getSpecialPrice();
+
+                                        if ($specialPrice && $originalPrice > $specialPrice) {
+                                            $discountPercentage = round((($originalPrice - $specialPrice) / $originalPrice) * 100);
+                                        } else {
+                                            $discountPercentage = 0;
+                                        }
+
+                                        if ($discountPercentage > 0) { ?>
+                                            <span class="homeSec4Offer">-<?= $discountPercentage ?>%</span>
+                                        <?php }  ?>
+                                    </div>
+                                    <h4 class="titlesAndHeadings"><?= $topDeal->getName() ?></h4>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="w-full flex justify-end ViewAllBtn greatDealBtn">
+                            <a href="<?= $block->getBaseUrl(); ?>fashion.html" class="" title="<?= $block->escapeHtml(__('Trending')) ?>"><?= $block->escapeHtml(__('View All')) ?></a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>

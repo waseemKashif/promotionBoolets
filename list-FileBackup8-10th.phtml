@@ -1,0 +1,509 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+use Magento\Framework\App\Action\Action;
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+?>
+<?php
+/** @var \Magento\Eav\Model\Config $eavConfig */
+$eavConfig = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Eav\Model\Config::class);
+$attribute = $eavConfig->getAttribute(\Magento\Catalog\Model\Product::ENTITY, 'country_of_manufacture');
+$countryOptions = [];
+foreach ($attribute->getSource()->getAllOptions() as $option) {
+    $countryOptions[$option['value']] = $option['label'];
+}
+
+// ✅ Initialize the Stock Helper
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$stockHelper = $objectManager->get(\Ahmarket\CategoryProductPosition\Helper\Stock::class);
+?>
+
+<?php
+
+$_productCollection = $block->getLoadedProductCollection();
+$_productCollection->addAttributeToSelect('weight');
+/** @var \Magento\Catalog\Helper\Output $_helper */
+$_helper = $block->getData('outputHelper');
+?>
+
+<?php if (!$_productCollection->count()) : ?>
+    <div class="message info empty">
+        <div><?= $block->escapeHtml(__('We can\'t find products matching the selection.')) ?></div>
+    </div>
+<?php else : ?>
+    <?php
+    $viewModel = ($block->getViewModel())? $block->getViewModel():null;
+    $deliveryTime =($block->getViewModel())? $viewModel->getDeliveryTime():null;
+    
+    $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
+    $itemsVisible = $cart->getQuote()->getAllVisibleItems();
+    $cartItems = [];
+    $cartItemsItds = [];
+    foreach($itemsVisible as $item) {
+        $cartItems[$item->getSku()] = $item->getQty();
+        $cartItemsItds[$item->getSku()] = $item->getItemId();
+    }
+    ?>
+    <?= $block->getToolbarHtml() ?>
+    <?= $block->getAdditionalHtml() ?>
+    <?php
+    if ($block->getMode() == 'grid') {
+        $viewMode = 'grid';
+        $imageDisplayArea = 'category_page_grid';
+        $showDescription = false;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    } else {
+        $viewMode = 'list';
+        $imageDisplayArea = 'category_page_list';
+        $showDescription = true;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    }
+    /**
+     * Position for actions regarding image size changing in vde if needed
+     */
+    $pos = $block->getPositioned();
+    ?>
+
+<style>
+ .ah-product-labels.stock-labels {
+     bottom: 0;
+    top: auto !important;
+    left: 4px;
+    right: auto !important;
+ }
+    .myCatalogAdd .qty-input-div {
+        height: 23px !important;
+        color: #fff !important;
+        border: none !important;
+        font-weight: 600;
+        text-align: center;
+        font-size: large;
+        pointer-events:none;
+    }
+    
+    /* ✅ Sold Out Styling */
+    .products-grid .product-item .action.primary {
+        color: #292D32;
+        display: flex;
+        height: 100%;
+        min-height: 30px;
+        border-radius: 22px;
+        align-items: center;
+        padding: 7px 12px;
+    }
+    
+    .svg-icon-plus {
+        position:static !important;
+    }
+    
+    /* Sold out label on product image */
+    .lbl_soldout {
+        background-color: #dc3545 !important;
+        color: white !important;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+    
+    /* Low stock label */
+    .lbl_low_stock {
+        background-color: #FFF176 !important;
+        color: #212529 !important;
+        border: none !important;
+        border-radius: 5px !important;
+        padding: 6px 4px !important;
+    }
+    
+    /* Sold out product styling */
+    .product-item.sold-out {
+        opacity: 0.7;
+        position: relative;
+    }
+    
+    .product-item.sold-out .product-item-photo {
+        filter: grayscale(30%);
+    }
+    
+    /* Sold out message styling */
+    .sold-out-message {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 7px;
+        background-color: #fff;
+        border: 1px solid #dc3545;
+        border-radius: 4px;
+    }
+    
+    .sold-out-text {
+        color: #dc3545;
+        font-weight: bold;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+    
+    /* Stock quantity display */
+    .stock-qty-info {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+    }
+    
+    /* Optional: Add overlay effect */
+    .product-item.sold-out .product-item-photo::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.3);
+        pointer-events: none;
+    }
+</style>
+
+    <div class="products wrapper <?= /* @noEscape */ $viewMode ?> products-<?= /* @noEscape */ $viewMode ?>">
+        <ol class="products list items product-items fvtListOl">
+            <?php /** @var $_product Product */ ?>
+            <?php foreach ($_productCollection as $_product) :
+                if(isset($cartItems[$_product->getSku()])){
+                    $cartQty = $cartItems[$_product->getSku()];
+                    $cartItemId = $cartItemsItds[$_product->getSku()];
+                } else {
+                    $cartQty = 0;
+                    $cartItemId = '';
+                }
+                $deliveryType=($_product->getData('delivery_type'))? $_product->getData('delivery_type'):'nol';
+                
+                // ✅ Use Stock Helper for stock checking
+                $hasStock = $stockHelper->hasStock($_product);
+                $stockQuantity = $stockHelper->getSaleableQuantity($_product);
+                $stockStatusMessage = $stockHelper->getStockStatusMessage($_product);
+                $shouldShowStockQty = $stockHelper->shouldShowStockQty($_product);
+                ?>
+                <li class="item product product-item fvtItem <?= !$hasStock ? 'sold-out' : '' ?>">
+                    <div class="product-item-info" data-container="product-<?= /* @noEscape */ $viewMode ?>">
+                        <?php  // Check if product has a valid image
+                        $hasImage = ($_product->getImage() && $_product->getImage() !== 'no_selection')? $block->escapeHtml($_product->getName()):'';
+                        $productImage = $block->getImage($_product, $imageDisplayArea);
+                        // Set the alt attribute using the product name (or any other value)
+                        $productImage->setData('alt', $hasImage);
+                        ?>
+                        <div class="selective_div relative skeleton">
+
+                            <a href="<?= $block->escapeUrl($_product->getProductUrl()) ?>" class="product photo product-item-photo new" tabindex="-1" title="<?= $_product->getName() ?>">
+                                <?= $productImage->toHtml() ?>
+                                <!-- Country Label in first UL -->
+                                <ul class="ah-product-labels ah-label-list">
+                                    <?php $countryValue = $_product->getData('country_of_manufacture'); ?>
+                                    <?php if (!empty($countryValue) && isset($countryOptions[$countryValue])): ?>
+                                        <li class="label-item lbl_country"><?php echo $this->escapeHtml($countryOptions[$countryValue]); ?></li>
+                                    <?php endif; ?>
+                                </ul>
+
+                                <!-- Stock Labels in separate UL (only if needed) -->
+                                <?php if (!$hasStock || ($shouldShowStockQty && $stockQuantity <= 3)) : ?>
+                                <ul class="ah-product-labels ah-label-list stock-labels">
+                                    <?php if (!$hasStock) : ?> <!-- ✅ SOLD OUT LABEL -->
+                                        <li class="label-item lbl_soldout">Sold Out</li>
+                                    <?php elseif ($shouldShowStockQty && $stockQuantity <= 3) : ?> <!-- ✅ LOW STOCK LABEL -->
+                                        <li class="label-item lbl_low_stock"><?php echo $stockQuantity; ?> left</li>
+                                    <?php endif; ?>
+                                </ul>
+                                <?php endif; ?>
+                            </a>
+                            <div class="product-item-inner product actions product-item-actions">
+                                <?php if ($_product->isSaleable() && $hasStock) : ?> <!-- ✅ ONLY SHOW ADD TO CART IF HAS STOCK -->
+                                    <?php
+                                    // Use helper to get available quantity instead of direct stock item access
+                                    $availableQty = $stockQuantity;
+                                    $stockItem = $_product->getExtensionAttributes()->getStockItem();
+                                    $maxQty = $stockItem ? $stockItem->getMaxSaleQty() : $availableQty;
+                                    $maxQtyAllowed = min($availableQty, $maxQty);
+                                    
+                                    /** @var \Magento\Catalog\Model\Product $product */
+                                    $categoryIds = $_product->getCategoryIds();
+                                    $isGrocery = in_array(3, $categoryIds); // grocery category id = 3
+                                    $uom = $_product->getAttributeText('uom');
+                                    $uomData = $_product->getData('uom');
+                                    $weight = $_product->getWeight();
+                                    $weightData = $_product->getData('weight');
+                                    $cartQty = ($cartQty > 0) ? $cartQty : 0;
+                                    ?>
+
+                                    <form class="tocart-form-class" <?php echo $weightData; ?> data-role="tocart-form" data-product-sku="<?= $block->escapeHtmlAttr($_product->getSku()) ?>" action="<?= $block->escapeUrl($block->getSubmitUrl($_product)) ?>" method="post">
+                                        <input type="hidden" name="product" value="<?= (int) $_product->getId() ?>">
+                                        <?= $block->getBlockHtml('formkey') ?>
+
+                                        <?php if ($isGrocery && !empty($uom) && ($uom == 'Kg' || $uom == 'g' ) ) {
+                                            $catQtyText = ($cartQty * $weight);
+                                        } else {
+                                            $catQtyText = $cartQty;
+                                        }
+                                        ?>
+                                        <button type="button"
+                                                data-cart-item-id="<?= $cartItemId; ?>"
+                                                class="action tocart primary myAddBtn"
+                                                data-product-id="<?= $_product->getId() ?>"  onclick="handleAdd(this)" title="add to cart" style="display:none">
+                                            <i class="fa fa-spinner fa-spin btn-spinner" style="display: none;"></i>
+                                            <?php if ($isGrocery) { ?>
+                                            <span class="hide-plus-svg"
+                                             <?= ($cartQty > 0) ? '' : 'style="display:none"' ?>
+                                               data-weight="<?php echo $weight ?>"
+                                                                      data-umo="<?php echo $uom ?>">
+                                                <?= ($cartQty > 0) ? trim($catQtyText) : trim('0') ?>
+                                                <?php echo trim($uom) ?>
+                                             </span>
+                
+                                            <?php } else { ?>
+                                                <span class="hide-plus-svg" <?= ($cartQty > 0) ? '' : 'style="display:none"' ?> >
+                                                 <?= ($cartQty > 0) ? $catQtyText : '0' ?>
+                                                <?php } ?>
+                                               </span>
+                                            <figure class="svg-icon-plus" <?= ($cartQty > 0) ? 'style="display:none"' : '' ?>>
+                                             <span class="add_text" >Add</span>
+                                            </figure>
+                                        </button>
+
+                                        <div class="myCatalogAdd">
+                                            <button type="button" class="counterBtns minus"
+                                                    data-cart-item-id="<?= $cartItemId; ?>"
+                                                    data-product-id="<?= $_product->getId() ?>">
+                                                <svg width="14" height="3" viewBox="0 0 14 3" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <rect width="14" height="3" fill="white"/>
+                                                </svg>
+                                            </button>
+                                            <?php if ($isGrocery && !empty($uom) && ($uom == 'kg' || $uom == 'g' ) && $weight > 0 ) { ?>
+                                                <input type="hidden" name="qty" value="<?= ($cartQty > 0) ? $cartQty : 1 ?>"
+                                                       min="1" max="<?= $maxQtyAllowed; ?>"
+                                                       class="quantity-input qty-input">
+                                                <div class="quantity-input qty-input qty-input-div" data-weight="<?= $weight ?>"
+                                                     data-umo="<?= $uom ?>">
+                                                    <?= ($cartQty > 0) ? ((int)$cartQty * (int)$weight) . " " . $uom : "1" . $uom ?>
+                                                </div>
+                                            <?php } else { ?>
+                                                <input type="number" name="qty" value="<?= ($cartQty > 0) ? $cartQty : 1 ?>"
+                                                       min="1" max="<?= $maxQtyAllowed; ?>"
+                                                       class="quantity-input qty-input">
+                                            <?php } ?>
+
+                                            <button type="button" class="counterBtns plus"
+                                                    data-cart-item-id="<?= $cartItemId; ?>"
+                                                    data-product-id="<?= $_product->getId() ?>">
+                                                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                            d="M14.4289 9.146H9.24891V14.718H5.72091V9.146H0.568906V6.038H5.72091V0.494H9.24891V6.038H14.4289V9.146Z"
+                                                            fill="white"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </form>
+
+                               <?php else : ?> <!-- ✅ SHOW SOLD OUT MESSAGE FOR OUT OF STOCK PRODUCTS -->
+                        <!--   <div class="stock unavailable sold-out-message">
+                        <span class="sold-out-text"><?= $block->escapeHtml(__('Sold Out')) ?></span>
+                        </div> -->
+                        <?php endif; ?>
+
+                            </div>
+                        </div>
+                        <div class="product details product-item-details">
+                            <?php $_productNameStripped = $block->stripTags($_product->getName(), null, true); ?>
+                            <a class="product name product-item-name product-item-link" href="<?= $block->escapeUrl($_product->getProductUrl()) ?>" title="<?= $_product->getName() ?>">
+                                <?= /* @noEscape */ $_helper->productAttribute($_product, $_product->getName(), 'name') ?>
+                            </a>
+                            <?= $block->getReviewsSummaryHtml($_product, $templateType) ?>
+                            <?= /* @noEscape */ $block->getProductPrice($_product) ?>
+                            
+                            <!-- ✅ Optional: Show stock status info -->
+                            <?php if ($shouldShowStockQty) : ?>
+                                <!-- <div class="stock-qty-info">
+                                    <?= $block->escapeHtml($stockStatusMessage) ?>
+                                </div> -->
+                            <?php endif; ?>
+                            
+                            <?php if ($_product->isAvailable()) : ?>
+                                <?= $block->getProductDetailsHtml($_product) ?>
+                            <?php endif; ?>
+                            <div class="timing delivery-info">
+                                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 6H16M4.33333 1V2.66667M12.6667 1V2.66667M3.5 9.33333H5.16667M3.5 12.6667H5.16667M7.66667 9.33333H9.33333M7.66667 12.6667H9.33333M11.8333 9.33333H13.5M11.8333 12.6667H13.5M3.66667 16H13.3333C14.2667 16 14.7335 16 15.09 15.8183C15.4036 15.6586 15.6586 15.4036 15.8183 15.09C16 14.7335 16 14.2667 16 13.3333V5.33333C16 4.39991 16 3.9332 15.8183 3.57668C15.6586 3.26307 15.4036 3.00811 15.09 2.84832C14.7335 2.66667 14.2667 2.66667 13.3333 2.66667H3.66667C2.73325 2.66667 2.26653 2.66667 1.91002 2.84832C1.59641 3.00811 1.34144 3.26307 1.18166 3.57668C1 3.9332 1 4.39991 1 5.33333V13.3333C1 14.2667 1 14.7335 1.18166 15.09C1.34144 15.4036 1.59641 15.6586 1.91002 15.8183C2.26653 16 2.73324 16 3.66667 16Z" stroke="#09802D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <span><?= ($deliveryTime && $deliveryTime['display'] && $deliveryTime['display'][$deliveryType])? __($deliveryTime['display'][$deliveryType]):null; ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+
+    <?= $block->getChildBlock('toolbar')->setIsBottom(true)->toHtml() ?>
+    <?php if (!$block->isRedirectToCartEnabled()) : ?>
+        <!-- <script type="text/x-magento-init">
+            {
+                "[data-role=tocart-form], .form.map.checkout": {
+                    "catalogAddToCart": {
+                        "product_sku": "<?php //$block->escapeJs($_product->getSku()) ?>"
+                }
+            }
+        }
+        </script> -->
+    <?php endif; ?>
+<?php endif; ?>
+    <script nonce data-defer-js-ignore type="text/javascript">
+              function updateButtonColor(button) {
+                const span = button.querySelector(".hide-plus-svg");
+             setTimeout(() => {
+                    const value = span.textContent.trim();
+                    const numericValue = parseFloat(value);
+                    button.style.display="flex";
+                    if (!isNaN(numericValue) && numericValue > 0) {
+                        button.style.backgroundColor = "#000"; // green if > 0
+                    } else {
+                        button.style.backgroundColor = "#fff";
+                        button.style.color="#000"// grey otherwise
+                    }
+                }, 3000);
+            }
+
+
+            function handleAdd(button) {
+                updateButtonColor(button);
+                console.log("Clicked button updated");
+            }
+
+            // Run once on page load for all buttons
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.querySelectorAll(".myAddBtn").forEach(btn => updateButtonColor(btn));
+                });
+                require(['ajaxAddToCart'], function () { });
+                // ends here api call
+                setTimeout(() => {
+                    document.querySelectorAll('.skeleton').forEach((li, index) => {
+                        li.classList.remove('skeleton');
+                    });
+                }, 1000);
+
+    </script>
+    <style>
+/*    .myCatalogAdd .counterBtns:hover svg path,*/
+/*.myCatalogAdd .counterBtns:hover svg rect,*/
+/*.myCatalogAdd .counterBtns:hover svg rect {*/
+/*    fill: #000*/
+/*}*/
+
+
+.product-item button.action.tocart.primary span {
+    /*color: #fff;*/
+    /*padding: 0 2px;*/
+}
+.product-item button.action.tocart.primary .hide-plus-svg {
+      color: #fff;
+    padding: 0 2px;
+ }
+/*.page-products .products-grid .product-item button.action.tocart.primary:hover span {*/
+/*    color: #fff;*/
+/*}*/
+/*.product-item button.action.tocart.primary:hover span {*/
+/*    color: #fff;*/
+/*}*/
+.myCatalogAdd .counterBtns:focus {
+    background: none !important;
+}
+
+    .myCatalogAdd .counterBtns {
+    font-weight: 700 !important;
+    font-size: 21px !important;
+    align-items: flex-start !important;
+    border: none;
+    /*padding: 1px 8px;*/
+    display:contents;
+    width: 40px !important;
+    color: #fff !important;
+    line-height: 17px;
+}
+
+.myCatalogAdd .counterBtns:hover {
+    /*background-color: #b7d635 !important;*/
+    /*color: #000 !important;*/
+    background: none !important;
+}
+    .myCatalogAdd input[type="number"] {
+    height: 26px !important;
+    background-color: #000;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 600;
+    text-align: center;
+    font-size: large;
+    pointer-events: none;
+    padding:0px;
+    width:fit-content;
+}
+        .myCatalogAdd {
+            /*background-color: #b7d635 !important;*/
+        }
+        .myCatalogAdd {
+            height: 32px !important;
+            transition: all 0.5s ease;
+            min-width: 60px;
+            max-width: 122px;
+            position: absolute;
+            /*right: -1px;*/
+            /*bottom: 8px;*/
+            display: flex;
+            align-items: center;
+            background-color: #b7d635;
+            border-radius: 3px;
+            visibility: hidden;
+            border-radius: 15px;
+            background: #000 !important;
+            justify-content: space-around;
+        }
+
+        .products-grid .product-item .action.primary {
+            
+            color: #292D32;
+            display: flex;
+            height: 100%;
+            min-height: 30px;
+            border-radius: 22px;
+            align-items: center;
+                padding: 7px 12px;
+        }
+        .product-item .product-item-inner .action.primary {
+             display:none;
+        }
+        .svg-icon-plus {
+            position:static !important;
+        }
+      .page-products .products-grid .product-item button[type="button"] {
+         
+            background-image: none;
+        /*background: #b7d635 !important;*/
+        border: 2px solid #000;
+        line-height: 16px;
+        height: 30px;
+        width:auto;
+        min-width:34px;
+        }
+      /*.product-item .action.primary:hover {*/
+      /*      background: #b7d635 !important;*/
+      /*          color: #fff !important;*/
+      /*      }*/
+    </style>
